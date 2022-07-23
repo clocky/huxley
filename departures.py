@@ -4,7 +4,7 @@ from rich.table import Table
 from Huxley import Huxley
 
 if __name__ == "__main__":
-    station = Huxley("wok")
+    station = Huxley("mia")
     station.get_departures()
 
     departures = Table(title=station.location_name)

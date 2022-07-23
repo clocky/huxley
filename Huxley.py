@@ -1,8 +1,9 @@
+import datetime
 import os
+import sys
 from dataclasses import dataclass
 
 import requests
-import datetime
 from dateutil import parser
 from dotenv import load_dotenv
 
@@ -62,18 +63,18 @@ class Huxley:
         self.access_token = os.getenv("DARWIN_API_KEY")
         self.response: dict = {}
 
-    def get_data(self, endpoint):
-        payload: object = {"accessToken": self.access_token}
-        url: str = f"{self.base_path}/{endpoint}/{self.crs}"
+    def get_data(self, endpoint: str, expand: bool, rows: int = 10):
+        payload: dict = {"accessToken": self.access_token, "expand": expand}
+        url: str = f"{self.base_path}/{endpoint}/{self.crs}/{rows}"
         r = requests.get(url, params=payload)
         self.response = r.json()
         return True
 
-    def get_departures(self):
-        self.get_data("departures")
+    def get_departures(self, expand: bool, rows: int):
+        self.get_data("departures", expand=expand, rows=rows)
 
-    def get_arrivals(self):
-        self.get_data("arrivals")
+    def get_arrivals(self, expand: bool, rows: int):
+        self.get_data("arrivals", expand=expand, rows=rows)
 
     @property
     def generated_at(self) -> datetime.datetime:
@@ -81,7 +82,9 @@ class Huxley:
 
     @property
     def train_services(self) -> list:
-        train_services = [Service(s) for s in self.response["trainServices"]]
+        train_services = []
+        if self.response["trainServices"] != None:
+            train_services = [Service(s) for s in self.response["trainServices"]]
         return train_services
 
     @property
