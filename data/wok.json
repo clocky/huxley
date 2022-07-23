@@ -1,0 +1,465 @@
+{
+    "trainServices": [
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "Basingstoke",
+                    "crs": "BSK",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW707500",
+            "serviceIdPercentEncoded": "ZfNp5iq2l2WQHsCnwL1JtA%3D%3D",
+            "serviceIdGuid": "e669f365-b62a-6597-901e-c0a7c0bd49b4",
+            "serviceIdUrlSafe": "ZfNp5iq2l2WQHsCnwL1JtA",
+            "sta": null,
+            "eta": null,
+            "std": "23:32",
+            "etd": "Delayed",
+            "platform": "1",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": "This train has been delayed by a fault with the signalling system",
+            "serviceID": "ZfNp5iq2l2WQHsCnwL1JtA==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "Portsmouth Harbour",
+                    "crs": "PMH",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW828200",
+            "serviceIdPercentEncoded": "8STWG8oWDApTbrytEbPHxQ%3D%3D",
+            "serviceIdGuid": "1bd624f1-16ca-0a0c-536e-bcad11b3c7c5",
+            "serviceIdUrlSafe": "8STWG8oWDApTbrytEbPHxQ",
+            "sta": null,
+            "eta": null,
+            "std": "23:56",
+            "etd": "On time",
+            "platform": "4",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "8STWG8oWDApTbrytEbPHxQ==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Basingstoke",
+                    "crs": "BSK",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": null,
+            "serviceIdPercentEncoded": "QuHSl%2BNL8JTSYtus%2BxJ0vw%3D%3D",
+            "serviceIdGuid": "97d2e142-4be3-94f0-d262-dbacfb1274bf",
+            "serviceIdUrlSafe": "QuHSl-NL8JTSYtus-xJ0vw",
+            "sta": null,
+            "eta": null,
+            "std": "23:57",
+            "etd": "23:59",
+            "platform": "5",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "QuHSl+NL8JTSYtus+xJ0vw==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Alton",
+                    "crs": "AON",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW629100",
+            "serviceIdPercentEncoded": "MBY5wzATU89OwflMH9d7ow%3D%3D",
+            "serviceIdGuid": "c3391630-1330-cf53-4ec1-f94c1fd77ba3",
+            "serviceIdUrlSafe": "MBY5wzATU89OwflMH9d7ow",
+            "sta": null,
+            "eta": null,
+            "std": "00:01",
+            "etd": "On time",
+            "platform": "5",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "MBY5wzATU89OwflMH9d7ow==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Southampton Central",
+                    "crs": "SOU",
+                    "via": null,
+                    "futureChangeTo": "5",
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW927900",
+            "serviceIdPercentEncoded": "KWNhnyYx5ZW%2FkS5jMqRR3A%3D%3D",
+            "serviceIdGuid": "9f616329-3126-95e5-bf91-2e6332a451dc",
+            "serviceIdUrlSafe": "KWNhnyYx5ZW_kS5jMqRR3A",
+            "sta": null,
+            "eta": null,
+            "std": "00:03",
+            "etd": "On time",
+            "platform": "4",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "KWNhnyYx5ZW/kS5jMqRR3A==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Salisbury",
+                    "crs": "SAL",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": null,
+            "serviceIdPercentEncoded": "KaNdsjNKMicpIq6FuC%2FYhQ%3D%3D",
+            "serviceIdGuid": "b25da329-4a33-2732-2922-ae85b82fd885",
+            "serviceIdUrlSafe": "KaNdsjNKMicpIq6FuC_YhQ",
+            "sta": null,
+            "eta": null,
+            "std": "00:08",
+            "etd": "On time",
+            "platform": "4",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "KaNdsjNKMicpIq6FuC/YhQ==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Portsmouth & Southsea",
+                    "crs": "PMS",
+                    "via": null,
+                    "futureChangeTo": "5",
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW727900",
+            "serviceIdPercentEncoded": "t6OSWfRGXcDYrjzMvF3ssg%3D%3D",
+            "serviceIdGuid": "5992a3b7-46f4-c05d-d8ae-3cccbc5decb2",
+            "serviceIdUrlSafe": "t6OSWfRGXcDYrjzMvF3ssg",
+            "sta": null,
+            "eta": null,
+            "std": "00:14",
+            "etd": "On time",
+            "platform": "4",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "t6OSWfRGXcDYrjzMvF3ssg==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Basingstoke",
+                    "crs": "BSK",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW707300",
+            "serviceIdPercentEncoded": "4o2V4HrSMaeFpJlNjHZuOQ%3D%3D",
+            "serviceIdGuid": "e0958de2-d27a-a731-85a4-994d8c766e39",
+            "serviceIdUrlSafe": "4o2V4HrSMaeFpJlNjHZuOQ",
+            "sta": null,
+            "eta": null,
+            "std": "00:19",
+            "etd": "On time",
+            "platform": "5",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "4o2V4HrSMaeFpJlNjHZuOQ==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "Bournemouth",
+                    "crs": "BMH",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "SW928000",
+            "serviceIdPercentEncoded": "BOJ9v2n5Rn7S5V%2FblQv2bw%3D%3D",
+            "serviceIdGuid": "bf7de204-f969-7e46-d2e5-5fdb950bf66f",
+            "serviceIdUrlSafe": "BOJ9v2n5Rn7S5V_blQv2bw",
+            "sta": null,
+            "eta": null,
+            "std": "00:20",
+            "etd": "On time",
+            "platform": "1",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "BOJ9v2n5Rn7S5V/blQv2bw==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Waterloo",
+                    "crs": "WAT",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Alton",
+                    "crs": "AON",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": null,
+            "serviceIdPercentEncoded": "yt1Pd3KYMlwwWN8gG4tL9w%3D%3D",
+            "serviceIdGuid": "774fddca-9872-5c32-3058-df201b8b4bf7",
+            "serviceIdUrlSafe": "yt1Pd3KYMlwwWN8gG4tL9w",
+            "sta": null,
+            "eta": null,
+            "std": "00:28",
+            "etd": "On time",
+            "platform": "5",
+            "operator": "South Western Railway",
+            "operatorCode": "SW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "yt1Pd3KYMlwwWN8gG4tL9w==",
+            "adhocAlerts": null
+        }
+    ],
+    "busServices": null,
+    "ferryServices": null,
+    "generatedAt": "2022-07-16T22:51:23.527672+00:00",
+    "locationName": "Woking",
+    "crs": "WOK",
+    "filterLocationName": null,
+    "filtercrs": null,
+    "filterType": 0,
+    "nrccMessages": null,
+    "platformAvailable": true,
+    "areServicesAvailable": true
+}
