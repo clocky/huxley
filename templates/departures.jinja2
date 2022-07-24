@@ -19,7 +19,8 @@
       </div>
       {% if station.are_services_available %}
         {% for service in station.train_services %}
-          <div class="row border-bottom border-secondary pt-2">
+          <div class="row border-bottom border-secondary pt-2"
+               id="{{ service.service_id_guid }}">
             {% for destination in service.destination %}
               <div class="col-1 h4">{{ service.std }}</div>
               <div class="col-4 h4 text-warning">
