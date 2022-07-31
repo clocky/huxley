@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <title>{{ station.crs | upper }}</title>
+    <meta description="Departure board for {{ station.location_name }}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
@@ -22,23 +23,30 @@
           <div class="row border-bottom border-secondary pt-2"
                id="{{ service.service_id_guid }}">
             {% for destination in service.destination %}
-              <div class="col-1 h4">{{ service.std }}</div>
-              <div class="col-4 h4 text-warning">
+              <div class="col-1 h4">
+                {% if loop.index0 == 0 %}<time>{{ service.std }}</time>{% endif %}
+              </div>
+              <div class="col-4 h4">
                 {% if loop.index0 >= 1 %}&amp;{% endif %}
-                {{ destination.location_name }}
-                {% if destination.via %}<span class="text-secondary d-inline-block mt-1">{{ destination.via }}</span>{% endif %}
+                <a href="{{ url_for('departures', crs=destination.crs | lower)}}"
+                   class="text-warning text-decoration-none">{{ destination.location_name }}</a>
+                {% if destination.via %}<span class="text-secondary d-block mt-1">{{ destination.via }}</span>{% endif %}
               </div>
               <div class="col-1 h4 text-end">
-                {% if service.platform != None %}
-                  {{ service.platform }}
-                {% else %}
-                  -
+                {% if loop.index0 == 0 %}
+                  {% if service.platform != None %}
+                    {{ service.platform }}
+                  {% else %}
+                    -
+                  {% endif %}
                 {% endif %}
               </div>
-              <div class="col-2 h4 text-end {% if service.is_cancelled %} text-danger{% endif %} {% if service.etd == 'On time' %} text-success{% endif %} ">
-                {{ service.etd }}
+              <div class="col-2 h4 text-end {% if service.is_cancelled or service.etd == "Delayed" %} text-danger{% endif %} {% if service.etd == 'On time' %} text-success{% endif %} ">
+                {% if loop.index0 == 0 %}{{ service.etd }}{% endif %}
               </div>
-              <div class="col-4 h4 text-end text-info">{{ service.operator }}</div>
+              <div class="col-4 h4 text-end text-info">
+                {% if loop.index0 == 0 %}{{ service.operator }}{% endif %}
+              </div>
               {% if service.is_cancelled %}
                 <div class="row">
                   <div class="col-1"></div>
