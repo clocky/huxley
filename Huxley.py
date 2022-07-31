@@ -87,7 +87,7 @@ class Huxley:
         """Request a list of departures for a given railway station."""
         self.get_data("departures", expand=expand, rows=rows)
 
-    def get_arrivals(self, expand: bool, rows: int):
+    def get_arrivals(self, expand: bool = False, rows: int = 10):
         """Request a list of arrivals for a given railway station."""
         self.get_data("arrivals", expand=expand, rows=rows)
 
