@@ -69,7 +69,7 @@ class Huxley:
     def __init__(self, crs):
         """Intiialise call to the API with a CRS (station code)."""
         load_dotenv()
-        self.base_path: str = "http://huxley2.azurewebsites.net"
+        self.BASE_URL: str = "http://huxley2.azurewebsites.net"
         self.crs: str = crs
         self.access_token = os.getenv("DARWIN_API_KEY")
         self.response: dict = {}
@@ -77,7 +77,7 @@ class Huxley:
     def get_data(self, endpoint: str, expand: bool, rows: int = 10):
         """Use Requests to retrieve JSON data from the Huxley API."""
         payload: dict = {"accessToken": self.access_token, "expand": expand}
-        url: str = f"{self.base_path}/{endpoint}/{self.crs}/{rows}"
+        url: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
         r = requests.get(url, params=payload)
         if r.status_code == 200:
             self.response = r.json()
