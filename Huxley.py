@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import requests
-from dateutil import parser
+from dateutil import parser, tz
 from dotenv import load_dotenv
 
 
@@ -92,11 +92,17 @@ class Huxley:
         self.get_data("arrivals", expand=expand, rows=rows)
 
     @property
-    def generated_at(self) -> datetime:
+    def generated_at(
+        self, timezone: str = "UTC", locale: str = "Europe/London"
+    ) -> datetime:
         """Create a datetime object from the generatedAt timestamp."""
         generated_at: datetime = datetime.now()
         if "generatedAt" in self.response:
-            generated_at = parser.parse(self.response["generatedAt"])
+            generated_at = (
+                parser.parse(self.response["generatedAt"])
+                .replace(tzinfo=tz.gettz(timezone))
+                .astimezone(tz.gettz(locale))
+            )
         return generated_at
 
     @property
