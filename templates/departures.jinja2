@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="refresh" content="60"/>
+    <meta charset="UTF-8"/>
     <title>{{ station.location_name }} ({{ station.crs | upper }})</title>
     <meta name="description"
           content="Departure board for {{ station.location_name }}"/>
@@ -20,11 +21,11 @@
           <p class="h1 text-end text-warning">{{ station.generated_at.strftime('%H:%M:%S')}}</p>
         </div>
       </div>
-      {% if station.are_services_available %}
-        {% for service in station.train_services %}
+      {%- if station.are_services_available %}
+        {%- for service in station.train_services %}
           <div class="row border-bottom border-secondary pt-2"
                data-guid="{{ service.service_id_guid }}">
-            {% for destination in service.destination %}
+            {%- for destination in service.destination %}
               <div class="col-1 h4">
                 {% if loop.index0 == 0 %}<time>{{ service.std }}</time>{% endif %}
               </div>
@@ -41,33 +42,33 @@
                   {%- elif service.is_cancelled %}
                     &nbsp;
                   {%- else %}
-                    &ndash;
+                    –
                   {% endif -%}
                 {% endif -%}
               </div>
-              {% if service.is_cancelled %}
+              {%- if service.is_cancelled %}
                 {% set departure_class = "text-danger" %}
               {% elif service.etd == "On time" %}
                 {% set departure_class = "text-success" %}
               {% elif service.etd == "Delayed" %}
                 {% set departure_class = "text-warning" %}
-              {% endif %}
+              {% endif -%}
               <div class="col-2 h4 text-end {{ departure_class }}">
                 {% if loop.index0 == 0 %}{{ service.etd }}{% endif %}
               </div>
               <div class="col-4 h4 text-end text-info">
                 {% if loop.index0 == 0 %}{{ service.operator }}{% endif %}
               </div>
-              {% if service.is_cancelled and service.cancel_reason %}
+              {%- if service.is_cancelled and service.cancel_reason %}
                 <div class="row">
                   <div class="col-1"></div>
                   <div class="col-11 text-secondary h4">{{ service.cancel_reason }}</div>
                 </div>
-              {% endif %}
-            {% endfor %}
+              {% endif -%}
+            {% endfor -%}
           </div>
-        {% endfor %}
-      {% endif %}
+        {% endfor -%}
+      {% endif -%}
     </div>
   </body>
 </html>
