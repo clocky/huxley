@@ -27,7 +27,7 @@
                data-guid="{{ service.service_id_guid }}">
             {%- for destination in service.destination %}
               <div class="col-1 h4">
-                {% if loop.index0 == 0 %}<time>{{ service.std }}</time>{% endif %}
+                <time>{{ service.std }}</time>
               </div>
               <div class="col-4 h4">
                 {% if loop.index0 >= 1 %}&amp;{% endif %}
@@ -62,7 +62,7 @@
               {%- if service.is_cancelled and service.cancel_reason %}
                 <div class="row">
                   <div class="col-1"></div>
-                  <div class="col-11 text-secondary h4">{{ service.cancel_reason }}</div>
+                  <div class="col-11 text-muted h4">{{ service.cancel_reason }}</div>
                 </div>
               {% endif -%}
             {% endfor -%}
