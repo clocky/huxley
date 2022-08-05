@@ -1,5 +1,5 @@
 """One-page Flask app to retrieve and render departures for a given station."""
-from flask import Flask, render_template
+from flask import Flask, redirect, url_for, render_template
 from Huxley import Huxley
 
 app = Flask(__name__)
@@ -7,9 +7,9 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 
 @app.route("/")
-def hello_world():
+def default():
     """Return a default main page."""
-    return "<p>Hello, World!</p>"
+    return redirect(url_for("departures", crs="wat"))
 
 
 @app.route("/departures/<string:crs>/")
