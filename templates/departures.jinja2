@@ -38,8 +38,10 @@
                 {%- if loop.index0 == 0 %}
                   {%- if service.platform != None -%}
                     {{ service.platform }}
+                  {%- elif service.is_cancelled %}
+                    &nbsp;
                   {%- else %}
-                    -
+                    &ndash;
                   {% endif -%}
                 {% endif -%}
               </div>
@@ -59,7 +61,7 @@
               {% if service.is_cancelled and service.cancel_reason %}
                 <div class="row">
                   <div class="col-1"></div>
-                  <div class="col-11 text-light h4">{{ service.cancel_reason }}</div>
+                  <div class="col-11 text-secondary h4">{{ service.cancel_reason }}</div>
                 </div>
               {% endif %}
             {% endfor %}
