@@ -6,69 +6,80 @@
     <title>{{ station.location_name }} ({{ station.crs | upper }})</title>
     <meta name="description"
           content="Departure board for {{ station.location_name }}"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
-          crossorigin="anonymous"/>
-  </head>
-  <body id="{{ station.crs }}" class="text-bg-dark font-monospace">
-    <div class="container-fluid mt-5 px-5">
-      <div class="row border-bottom border-light">
-        <div class="col-6">
-          <h1>{{ station.location_name }}</h1>
-        </div>
-        <div class="col-6">
-          <p class="h1 text-end text-warning">{{ station.generated_at.strftime('%H:%M:%S')}}</p>
-        </div>
+    {% set comma = joiner(", ") %}
+    {% set stations %}
+    {%- if station.are_services_available %}
+      {%- for service in station.train_services -%}
+        {%- for destination in service.destination -%}
+          {{ comma() }}{{ destination.location_name }}
+        {%- endfor -%}
+      {% endfor -%}
+    {% endif -%}
+  {% endset -%}
+  <meta name="keywords" content="{{ stations }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+        crossorigin="anonymous"/>
+</head>
+<body id="{{ station.crs }}" class="text-bg-dark font-monospace">
+  <div class="container-fluid mt-5 px-5">
+    <div class="row border-bottom border-light">
+      <div class="col-6">
+        <h1>{{ station.location_name }}</h1>
       </div>
-      {%- if station.are_services_available %}
-        {%- for service in station.train_services %}
-          <div class="row border-bottom border-secondary pt-2"
-               data-guid="{{ service.service_id_guid }}">
-            {%- for destination in service.destination %}
-              <div class="col-1 h4">
-                <time>{{ service.std }}</time>
-              </div>
-              <div class="col-4 h4">
-                {% if loop.index0 >= 1 %}&amp;{% endif %}
-                <a href="{{ url_for('departures', crs=destination.crs | lower)}}"
-                   class="link-warning text-decoration-none">{{ destination.location_name }}</a>
-                {% if destination.via %}<span class="text-secondary d-block mt-1">{{ destination.via }}</span>{% endif %}
-              </div>
-              <div class="col-1 h4 text-end">
-                {%- if loop.index0 == 0 %}
-                  {%- if service.platform != None -%}
-                    {{ service.platform }}
-                  {%- elif service.is_cancelled %}
-                    &nbsp;
-                  {%- else %}
-                    –
-                  {% endif -%}
-                {% endif -%}
-              </div>
-              {%- if service.is_cancelled %}
-                {% set departure_class = "text-danger" %}
-              {% elif service.etd == "On time" %}
-                {% set departure_class = "text-success" %}
-              {% elif service.etd == "Delayed" %}
-                {% set departure_class = "text-warning" %}
-              {% endif -%}
-              <div class="col-2 h4 text-end {{ departure_class }}">
-                {% if loop.index0 == 0 %}{{ service.etd }}{% endif %}
-              </div>
-              <div class="col-4 h4 text-end text-info">
-                {% if loop.index0 == 0 %}{{ service.operator }}{% endif %}
-              </div>
-              {%- if service.is_cancelled and service.cancel_reason %}
-                <div class="row">
-                  <div class="col-1"></div>
-                  <div class="col-11 text-muted h4">{{ service.cancel_reason }}</div>
-                </div>
-              {% endif -%}
-            {% endfor -%}
-          </div>
-        {% endfor -%}
-      {% endif -%}
+      <div class="col-6">
+        <p class="h1 text-end text-warning">{{ station.generated_at.strftime('%H:%M:%S')}}</p>
+      </div>
     </div>
-  </body>
+    {%- if station.are_services_available %}
+      {%- for service in station.train_services %}
+        <div class="row border-bottom border-secondary pt-2"
+             data-guid="{{ service.service_id_guid }}">
+          {%- for destination in service.destination %}
+            <div class="col-1 h4">
+              <time>{{ service.std }}</time>
+            </div>
+            <div class="col-4 h4">
+              {% if loop.index0 >= 1 %}&amp;{% endif %}
+              <a href="{{ url_for('departures', crs=destination.crs | lower)}}"
+                 class="link-warning text-decoration-none">{{ destination.location_name }}</a>
+              {% if destination.via %}<span class="text-secondary d-block mt-1">{{ destination.via }}</span>{% endif %}
+            </div>
+            <div class="col-1 h4 text-end">
+              {%- if loop.index0 == 0 %}
+                {%- if service.platform != None -%}
+                  {{ service.platform }}
+                {%- elif service.is_cancelled %}
+                  &nbsp;
+                {%- else %}
+                  –
+                {% endif -%}
+              {% endif -%}
+            </div>
+            {%- if service.is_cancelled %}
+              {% set departure_class = "text-danger" %}
+            {% elif service.etd == "On time" %}
+              {% set departure_class = "text-success" %}
+            {% elif service.etd == "Delayed" %}
+              {% set departure_class = "text-warning" %}
+            {% endif -%}
+            <div class="col-2 h4 text-end {{ departure_class }}">
+              {% if loop.index0 == 0 %}{{ service.etd }}{% endif %}
+            </div>
+            <div class="col-4 h4 text-end text-info">
+              {% if loop.index0 == 0 %}{{ service.operator }}{% endif %}
+            </div>
+            {%- if service.is_cancelled and service.cancel_reason %}
+              <div class="row">
+                <div class="col-1"></div>
+                <div class="col-11 text-muted h4">{{ service.cancel_reason }}</div>
+              </div>
+            {% endif -%}
+          {% endfor -%}
+        </div>
+      {% endfor -%}
+    {% endif -%}
+  </div>
+</body>
 </html>
