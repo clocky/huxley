@@ -10,3 +10,4 @@ Uses the [Huxley2 API](https://huxley2.azurewebsites.net) for requests and [Boot
 1. ```python3 -m pip install -r requirements.txt```
 2. Set a `DARWIN_API_KEY` in a `.env` file in the root of this project. If you don't already have one, you can request an access token via the National Rail [OpenLDBWS portal](https://realtime.nationalrail.co.uk/OpenLDBWSRegistration/Registration).
 3. ```flask run```
+
