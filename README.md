@@ -1,12 +1,12 @@
 # Huxley
 
-A one-page Flask app to dynamically show a departure board for a given
-railway in the United Kingdom.
+A one-page [Flask](https://flask.palletsprojects.com/en/2.2.x/) app to 
+dynamically show a departure board for a given railway in the United Kingdom. 
+
+Uses the [Huxley2 API](https://huxley2.azurewebsites.net) for requests.
 
 ## Install
 
-```python3 -m pip install -r requirements.txt```
-
-## Run
-
-```flask run```
+1. ```python3 -m pip install -r requirements.txt```
+2. Set a `DARWIN_API_KEY` in a `.env` file in the root of this project.
+3. ```flask run```
