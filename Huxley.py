@@ -1,4 +1,5 @@
-"""Read and parse information from the Huxley API for National Rail services."""
+# """Read and parse information from the Huxley API for National Rail services."""
+# type: ignore [call-arg]
 import os
 from dataclasses import dataclass
 from datetime import datetime
