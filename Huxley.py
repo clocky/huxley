@@ -10,6 +10,51 @@ from dotenv import load_dotenv
 
 
 @dataclass
+class Toilet:
+    """A class to represent a toilet on a train coach."""
+
+    status: int
+    value: str
+
+    def __init__(self, toilet: dict):
+        self.status = toilet["status"]
+        self.value = toilet["value"]
+
+
+@dataclass
+class Coach:
+    """A class to represent a train coach."""
+
+    coach_class: str
+    loading: int
+    loading_specified: bool
+    number: str
+    toilet: list
+
+    def __init__(self, coach: dict):
+        """Initialise a Coach object."""
+        self.coach_class = coach["coachClass"]
+        self.loading = coach["loading"]
+        self.loading_specified = coach["loadingSpecified"]
+        self.number = coach["number"]
+        self.toilet = Toilet(coach["toilet"]) if coach["toilet"] is not None else None
+
+
+@dataclass
+class Formation:
+    """A class to represent a train formation."""
+
+    avg_loading: int
+    avg_loading_specified: bool
+    coaches: list
+
+    def __init__(self, formation: dict):
+        self.avg_loading = formation["avgLoading"]
+        self.avg_loading_specified = formation["avgLoadingSpecified"]
+        self.coaches = [Coach(d) for d in formation["coaches"]]
+
+
+@dataclass
 class Point:
     """Define a point on a route, such as a station or a platform."""
 
@@ -45,11 +90,15 @@ class Service:
     operator: str
     operator_code: str
     service_id_guid: str
+    service_type: int
+    formation: list
 
     def __init__(self, service: dict):
         """Intialise a Service object."""
         self.destination = [Point(d) for d in service["destination"]]
-        self.origin = [Point(d) for d in service["origin"]]
+        self.origin = [Point(o) for o in service["origin"]]
+        if service["formation"] is not None:
+            self.formation = Formation(service["formation"])
         self.sta = service["sta"]
         self.eta = service["eta"]
         self.std = service["std"]
@@ -62,6 +111,7 @@ class Service:
         self.operator = service["operator"]
         self.operator_code = service["operatorCode"]
         self.service_id_guid = service["serviceIdGuid"]
+        self.service_type = service["serviceType"]
 
 
 class Huxley:
@@ -84,11 +134,11 @@ class Huxley:
             self.response = r.json()
         return True
 
-    def get_departures(self, expand: bool = False, rows: int = 10):
+    def get_departures(self, expand: bool = False, rows: int = 8):
         """Request a list of departures for a given railway station."""
         self.get_data("departures", expand=expand, rows=rows)
 
-    def get_arrivals(self, expand: bool = False, rows: int = 10):
+    def get_arrivals(self, expand: bool = False, rows: int = 8):
         """Request a list of arrivals for a given railway station."""
         self.get_data("arrivals", expand=expand, rows=rows)
 
