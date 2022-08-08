@@ -127,11 +127,11 @@
   <body id="{{ station.crs }}" class="text-bg-dark">
     <div class="container-lg">
       <div class="row border-bottom border-light border-2 bg-primary pt-3 pb-2 mb-1">
-        <div class="col-8 px-2 px-sm-3">
-          <h1 class="h4">{{ station.location_name }}</h1>
+        <div class="col-9 col-sm-8 px-2 px-sm-3">
+          <h1 class="h3">{{ station.location_name }}</h1>
         </div>
-        <div class="col-4 text-end px-sm-3 px-2">
-          <p class="h4 text-light">{{ station.generated_at.strftime('%H:%M:%S')}}</p>
+        <div class="col-3 col-sm-4 text-end px-sm-3 px-2">
+          <p class="h3 text-light">{{ station.generated_at.strftime('%H:%M')}}</p>
         </div>
       </div>
       {%- if station.are_services_available %}
