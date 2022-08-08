@@ -98,7 +98,7 @@
   {% endmacro %}
   {% macro row_delayed(etd, delay_reason)%}
     {%- if etd == "Delayed" and delay_reason %}
-      <div class="col-10 offset-2 h6 px-0 text-secondary">{{ delay_reason }}</div>
+      <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ delay_reason }}</div>
     {% endif -%}
   {% endmacro %}
   {% macro row_formation(service)%}
