@@ -43,7 +43,9 @@
       <a href="{{ url_for('departures', crs=destination.crs | lower)}}"
          class="link-warning text-decoration-none">
       {{ destination.location_name }}</a>
-      {% if destination.via %}<span class="text-light mt-1">{{ destination.via }}</span>{% endif %}
+      {% if destination.via %}
+        <span class="text-light d-block d-sm-inline d-md-block d-lg-inline">{{ destination.via }}</span>
+      {% endif %}
     </div>
   {% endmacro %}
   {#
@@ -109,6 +111,9 @@
       {% endif %}
     {% endif -%}
   {% endmacro %}
+  {#
+    Macro for rendering the service row
+  #}
   {% macro row_service(service) %}
     <div class="row border-bottom border-secondary pt-2 pb-0 px-2"
          data-guid="{{ service.service_id_guid }}">
