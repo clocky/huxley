@@ -41,6 +41,22 @@ class Coach:
 
 
 @dataclass
+class Point:
+    """A class to represent a calling point on a service."""
+
+    location_name: str
+    crs: str
+    st: str
+    et: str
+    at: str
+    is_cancelled: bool
+    length: int
+    detach_front: bool
+    formation: str
+    adhoc_alerts: str
+
+
+@dataclass
 class Formation:
     """A class to represent a train formation."""
 
@@ -55,7 +71,7 @@ class Formation:
 
 
 @dataclass
-class Point:
+class Destination:
     """Define a point on a route, such as a station or a platform."""
 
     location_name: str
@@ -64,13 +80,13 @@ class Point:
     future_change_to: str
     assoc_is_cancelled: bool
 
-    def __init__(self, point: dict):
+    def __init__(self, destination: dict):
         """Initialise a point."""
-        self.location_name = point["locationName"]
-        self.crs = point["crs"]
-        self.via = point["via"]
-        self.future_change_to = point["futureChangeTo"]
-        self.assoc_is_cancelled = point["assocIsCancelled"]
+        self.location_name = destination["locationName"]
+        self.crs = destination["crs"]
+        self.via = destination["via"]
+        self.future_change_to = destination["futureChangeTo"]
+        self.assoc_is_cancelled = destination["assocIsCancelled"]
 
 
 @dataclass
@@ -95,8 +111,8 @@ class Service:
 
     def __init__(self, service: dict):
         """Intialise a Service object."""
-        self.destination = [Point(d) for d in service["destination"]]
-        self.origin = [Point(o) for o in service["origin"]]
+        self.destination = [Destination(d) for d in service["destination"]]
+        self.origin = [Destination(o) for o in service["origin"]]
         if service["formation"] is not None:
             self.formation = Formation(service["formation"])
         self.sta = service["sta"]
@@ -126,7 +142,7 @@ class Huxley:
         self.response: dict = {}
         self.url: str = ""
 
-    def get_data(self, endpoint: str, expand: bool, rows: int = 10):
+    def get_data(self, endpoint: str, expand: bool = False, rows: int = 10):
         """Use Requests to retrieve JSON data from the Huxley API."""
         self.payload: dict = {"accessToken": self.access_token, "expand": expand}
         self.endpoint: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
