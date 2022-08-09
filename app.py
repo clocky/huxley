@@ -14,8 +14,9 @@ def default():
 
 @app.route("/departures/<string:crs>/")
 @app.route("/departures/<string:crs>/<int:rows>")
-def departures(crs=None, rows=10):
+@app.route("/departures/<string:crs>/<int:rows>/<string:expand>")
+def departures(crs=None, rows=10, expand=False):
     """Render a departure board for the given station."""
     station = Huxley(crs)
-    station.get_departures(expand=False, rows=rows)
+    station.get_departures(expand=expand, rows=rows)
     return render_template("departures.jinja2", station=station)
