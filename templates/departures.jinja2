@@ -87,24 +87,36 @@
       {% endif -%}
     </div>
   {% endmacro %}
+  {#
+    Macro for rendering the operator column
+  #}
   {% macro col_operator(operator, operator_code, index)%}
     <div class="d-none d-md-block col-md-4 col-lg-3 h5 text-end text-info"
          data-operator-code="{{ operator_code }}">
       {% if index == 0 %}{{ operator }}{% endif %}
     </div>
   {% endmacro %}
+  {#
+    Macro for rendering the cancellation row
+  #}
   {% macro row_cancelled(is_cancelled, cancel_reason)%}
     {# Only show if flagged as cancelled and a cancellation reason exists #}
     {% if is_cancelled and cancel_reason %}
       <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ cancel_reason }}</div>
     {% endif -%}
   {% endmacro %}
+  {#
+    Macro for rendering the delayed row
+  #}
   {% macro row_delayed(std, etd, is_cancelled, delay_reason)%}
     {# Don't show delay reasons if the service was cancelled #}
     {%- if (etd == "Delayed" or etd != std) and delay_reason and is_cancelled == False %}
       <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ delay_reason }}</div>
     {% endif -%}
   {% endmacro %}
+  {#
+    Macro for rendering the formation row
+  #}
   {% macro row_formation(service)%}
     {%- if service.formation %}
       {# Don't show formation information if the service was cancelled #}
