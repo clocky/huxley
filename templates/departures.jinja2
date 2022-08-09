@@ -58,6 +58,8 @@
           {{ platform }}
         {%- elif is_cancelled %}
           &nbsp;
+        {%- elif service_type == 1 %}
+          Bus
         {%- elif service_type == 2 %}
           Ferry
         {%- else %}
@@ -150,11 +152,15 @@
             {{ row_service(service)}}
           {% endfor -%}
         {% endif %}
+        {% if station.bus_services %}
+          {%- for service in station.bus_services %}
+            {{ row_service(service)}}
+          {% endfor -%}
+        {% endif %}
       {% endif -%}
       <div class="row py-2 px-1">
         <div class="col-12">
-          <a href="https://huxley2.azurewebsites.net/departures/{{ station.crs }}"
-             class="text-light">view-source</a>
+          <a href="{{ station.url }}" class="text-light">view-source</a>
         </div>
       </div>
     </div>
