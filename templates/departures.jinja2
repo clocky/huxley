@@ -96,8 +96,8 @@
       <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ cancel_reason }}</div>
     {% endif -%}
   {% endmacro %}
-  {% macro row_delayed(etd, delay_reason)%}
-    {%- if etd == "Delayed" and delay_reason %}
+  {% macro row_delayed(std, etd, delay_reason)%}
+    {%- if (etd == "Delayed" or etd != std) and delay_reason %}
       <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ delay_reason }}</div>
     {% endif -%}
   {% endmacro %}
@@ -124,7 +124,7 @@
         {{ col_etd(service.etd, service.is_cancelled, loop.index0) }}
         {{ col_operator(service.operator, service.operator_code, loop.index0) }}
         {{ row_cancelled(service.is_cancelled, service.cancel_reason) }}
-        {{ row_delayed(service.etd, service.delay_reason)}}
+        {{ row_delayed(service.std, service.etd, service.delay_reason)}}
         {{ row_formation(service)}}
       {% endfor %}
     </div>
