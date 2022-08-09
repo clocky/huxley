@@ -124,12 +124,14 @@ class Huxley:
         self.crs: str = crs
         self.access_token = os.getenv("DARWIN_API_KEY")
         self.response: dict = {}
+        self.url: str = ""
 
     def get_data(self, endpoint: str, expand: bool, rows: int = 10):
         """Use Requests to retrieve JSON data from the Huxley API."""
-        payload: dict = {"accessToken": self.access_token, "expand": expand}
-        url: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
-        r = requests.get(url, params=payload)
+        self.payload: dict = {"accessToken": self.access_token, "expand": expand}
+        self.endpoint: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
+        r = requests.get(self.endpoint, params=self.payload)
+        self.url = r.url
         if r.status_code == 200:
             self.response = r.json()
         return True
