@@ -94,12 +94,14 @@
     </div>
   {% endmacro %}
   {% macro row_cancelled(is_cancelled, cancel_reason)%}
+    {# Only show if flagged as cancelled and a cancellation reason exists #}
     {% if is_cancelled and cancel_reason %}
       <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ cancel_reason }}</div>
     {% endif -%}
   {% endmacro %}
-  {% macro row_delayed(std, etd, delay_reason)%}
-    {%- if (etd == "Delayed" or etd != std) and delay_reason %}
+  {% macro row_delayed(std, etd, is_cancelled, delay_reason)%}
+    {# Don't show delay reasons if the service was cancelled #}
+    {%- if (etd == "Delayed" or etd != std) and delay_reason and is_cancelled == False %}
       <div class="col-10 offset-2 col-sm-11 offset-sm-1 px-sm-3 h6 px-0 text-secondary">{{ delay_reason }}</div>
     {% endif -%}
   {% endmacro %}
@@ -126,7 +128,7 @@
         {{ col_etd(service.etd, service.is_cancelled, loop.index0) }}
         {{ col_operator(service.operator, service.operator_code, loop.index0) }}
         {{ row_cancelled(service.is_cancelled, service.cancel_reason) }}
-        {{ row_delayed(service.std, service.etd, service.delay_reason)}}
+        {{ row_delayed(service.std, service.etd, service.is_cancelled, service.delay_reason)}}
         {{ row_formation(service)}}
       {% endfor %}
     </div>
