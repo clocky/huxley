@@ -97,17 +97,19 @@ class Service:
     sta: str
     etd: str
     std: str
+    formation: list
     is_circular_route: bool
     is_cancelled: bool
+    is_reverse_formation: bool
     cancel_reason: str
     delay_reason: str
     destination: list
-    platform: int
+    detach_front: bool
     operator: str
     operator_code: str
+    platform: int
     service_id_guid: str
     service_type: int
-    formation: list
 
     def __init__(self, service: dict):
         """Intialise a Service object."""
@@ -121,8 +123,10 @@ class Service:
         self.etd = service["etd"]
         self.is_circular_route = service["isCircularRoute"]
         self.is_cancelled = service["isCancelled"]
+        self.is_reverse_formation = service["isReverseFormation"]
         self.cancel_reason = service["cancelReason"]
         self.delay_reason = service["delayReason"]
+        self.detach_front = service["detachFront"]
         self.platform = service["platform"]
         self.operator = service["operator"]
         self.operator_code = service["operatorCode"]
