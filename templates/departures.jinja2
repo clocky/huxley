@@ -119,8 +119,11 @@
   #}
   {% macro row_formation(service)%}
     {%- if service.formation %}
-      {# Don't show formation information if the service was cancelled #}
-      {% if service.is_cancelled == False %}
+      {#
+         Don't show formation information if the service was cancelled, or
+         if the service has a delay_reason string available. 
+      #}
+      {% if service.is_cancelled == False or service.delay_reason == "" %}
         <div class="col-10 offset-2 px-0 col-sm-11 offset-sm-1 px-sm-3 h6 text-secondary pb-0">
           This train is formed of {{ service.formation.coaches | count }} coaches
         </div>
