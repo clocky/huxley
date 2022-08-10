@@ -117,6 +117,8 @@ class Service:
         self.origin = [Destination(o) for o in service["origin"]]
         if service["formation"] is not None:
             self.formation = Formation(service["formation"])
+        else:
+            self.formation = []
         self.sta = service["sta"]
         self.eta = service["eta"]
         self.std = service["std"]
