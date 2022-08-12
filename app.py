@@ -20,12 +20,3 @@ def departures(crs=None, rows=10, expand=False):
     station = Huxley(crs)
     station.get_departures(expand=expand, rows=rows)
     return render_template("departures.jinja2", station=station)
-
-
-@app.route("/services/<string:crs>/")
-@app.route("/services/<string:crs>/<int:rows>")
-def services(crs=None, rows=10, expand=True):
-    """Render a detailed departure board for the given station."""
-    station = Huxley(crs)
-    station.get_departures(expand=expand, rows=rows)
-    return render_template("services.jinja2", station=station)
