@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import click
+from rich import box
 from rich.console import Console
 from rich.table import Table
 from rich.theme import Theme
@@ -11,9 +12,10 @@ BOOTSTRAP = Theme(
     {
         "success": "#198754",
         "warning": "#ffc107",
-        "danger": "#dc3545",
-        "info": "#0dcaf0",
         "light": "#f8f9fa",
+        "info": "#0dcaf0",
+        "primary": "#0d6efd",
+        "danger": "#dc3545",
         "dark": "#212529",
         "secondary": "#6c757d",
     }
@@ -23,7 +25,14 @@ BOOTSTRAP = Theme(
 def show_departures(station):
     console = Console(theme=BOOTSTRAP)
 
-    table = Table(style="dark")
+    table = Table(
+        style="secondary",
+        show_header=True,
+        box=box.SIMPLE_HEAD,
+        title=station.location_name,
+        title_style="warning",
+    )
+    table.caption_style = "warning"
     table.add_column("Time", width=6)
     table.add_column("Destination", style="warning", width=40)
     table.add_column("Plat", justify="right", width=4)
@@ -64,8 +73,8 @@ def show_departures(station):
 
 
 @click.command()
-@click.option("--crs", prompt="CRS Code", help="CRS Code")
-@click.option("--rows", prompt="Number of rows", help="Number of rows")
+@click.option("--crs", help="CRS Code")
+@click.option("--rows", default=12, help="Number of rows")
 def departures(crs, rows):
     station = Huxley(crs)
     station.get_departures(expand=False, rows=rows)
