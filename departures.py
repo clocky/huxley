@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""CLI tool to show upcoming departures for a given railway station."""
 import click
 import re
 from rich import box
@@ -24,6 +25,7 @@ BOOTSTRAP = Theme(
 
 
 def show_departures(station, show_nrcc_messages: bool):
+    """Render a Rich table of departures for a railway station."""
     console = Console(theme=BOOTSTRAP)
 
     table = Table(
@@ -72,6 +74,7 @@ def show_departures(station, show_nrcc_messages: bool):
 
 
 def parse_nrcc_messages(nrcc_messages: list) -> list:
+    """Parse NRCC messages, stripping HTML and control characters."""
     messages: list = []
     for message in nrcc_messages:
         message["value"] = re.sub(r"<.*?>", "", message["value"])
@@ -81,6 +84,7 @@ def parse_nrcc_messages(nrcc_messages: list) -> list:
 
 
 def parse_destination(service) -> str:
+    """Show the destination of a service, including any via points."""
     destination: str = service.destination
     for d in service.destination:
         destination = f"{d.location_name}"
@@ -91,6 +95,7 @@ def parse_destination(service) -> str:
 
 
 def parse_etd(service) -> str:
+    """Parse the expected departure time of a service, adding color hints."""
     etd: str = service.etd
     if service.etd == "On time":
         etd = f"[success]{etd}[/success]"
@@ -129,6 +134,7 @@ def parse_etd(service) -> str:
     help="Show NRCC messages for the station",
 )
 def departures(crs, rows, show_nrcc_messages):
+    """CLI tool to show departures for a railway station."""
     station = huxley.Station(crs)
     station.get_departures(expand=False, rows=rows)
     show_departures(station, show_nrcc_messages)
