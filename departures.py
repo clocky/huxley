@@ -124,6 +124,7 @@ def parse_etd(service) -> str:
     "--messages",
     "show_nrcc_messages",
     type=bool,
+    is_flag=True,
     default=False,
     help="Show NRCC messages for the station",
 )
