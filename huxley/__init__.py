@@ -1,4 +1,4 @@
-# """Read and parse information from the Huxley API for National Rail services."""
+"""Read and parse information from the Huxley API for National Rail services."""
 # type: ignore [call-arg]
 import os
 from dataclasses import dataclass
@@ -49,6 +49,7 @@ class Toilet:
     value: str
 
     def __init__(self, toilet: dict):
+        """Initialise a toilet object."""
         self.status = toilet["status"]
         self.value = toilet["value"]
 
@@ -97,6 +98,7 @@ class Formation:
     coaches: list
 
     def __init__(self, formation: dict):
+        """Define a train formation, including the coaches."""
         self.avg_loading = formation["avgLoading"]
         self.avg_loading_specified = formation["avgLoadingSpecified"]
         self.coaches = [Coach(d) for d in formation["coaches"]]
