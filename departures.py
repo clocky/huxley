@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import click
+import re
 from rich import box
 from rich.console import Console
 from rich.table import Table
 from rich.theme import Theme
 
-from Huxley import Huxley
+import huxley
 
 BOOTSTRAP = Theme(
     {
@@ -36,14 +37,14 @@ def show_departures(station):
     table.add_column("Time", width=6)
     table.add_column("Destination", style="warning", width=40)
     table.add_column("Plat", justify="right", width=4)
-    table.add_column("Expected", justify="right", width=9)
+    table.add_column("Expected", justify="right", width=10)
     table.add_column("Operator", justify="right", style="info")
 
     if station.train_services:
         for service in station.train_services:
-            std: str = service.std
+            std: str = service.std.strftime("%H:%M")
             platform: str = service.platform
-            operator: str = service.operator
+            operator: str = service.operator_short_name
             destination: str = parse_destination(service)
             etd: str = parse_etd(service)
             table.add_row(std, destination, platform, etd, operator)
@@ -55,25 +56,33 @@ def show_departures(station):
             if hasattr(service, "delay_reason"):
                 if service.delay_reason is not None and service.cancel_reason is None:
                     table.add_row("", f"[secondary]{service.delay_reason}[/secondary]")
-            console.print(table)
-    else:
-        if station.nrcc_messages is not None:
-            nrcc_messages: str = parse_nrcc_messages(station.nrcc_messages)
-            console.print(table)
-            console.print(nrcc_messages)
+    console.print(table)
+
+    if station.nrcc_messages is not None:
+        nrcc_messages: list = parse_nrcc_messages(station.nrcc_messages)
+        for message in nrcc_messages:
+            console.print(
+                message,
+                highlight=False,
+                new_line_start=True,
+                style="secondary",
+                width=80,
+            )
 
 
-def parse_nrcc_messages(nrcc_messages: list) -> str:
-    messages: str = ""
+def parse_nrcc_messages(nrcc_messages: list) -> list:
+    messages: list = []
     for message in nrcc_messages:
-        messages = f"{messages}[secondary]{message['value']}[/secondary]\n"
+        message["value"] = re.sub(r"<.*?>", "", message["value"])
+        message["value"] = re.sub(r"(\r\n|\n|\r)", "", message["value"])
+        messages.append(message["value"])
     return messages
 
 
 def parse_destination(service) -> str:
     destination: str = service.destination
     for d in service.destination:
-        destination = d.location_name
+        destination = f"{d.location_name}"
         if hasattr(d, "via"):
             if d.via is not None:
                 destination = f"{destination} [white]{d.via}[/white]"
@@ -95,7 +104,7 @@ def parse_etd(service) -> str:
 @click.option("--crs", default="kgx", help="CRS Code")
 @click.option("--rows", default=12, help="Number of rows")
 def departures(crs, rows):
-    station = Huxley(crs)
+    station = huxley.Station(crs)
     station.get_departures(expand=False, rows=rows)
     show_departures(station)
 
