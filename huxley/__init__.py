@@ -71,7 +71,9 @@ class Coach:
         self.loading = coach["loading"]
         self.loading_specified = coach["loadingSpecified"]
         self.number = coach["number"]
-        self.toilet = Toilet(coach["toilet"]) if coach["toilet"] is not None else None
+        self.toilet = (
+            Toilet(coach["toilet"]) if coach.get("toilet") is not None else None
+        )
 
 
 @dataclass
