@@ -219,10 +219,10 @@ class Station:
         self.get_data("arrivals", expand=expand, rows=rows)
 
     @property
-    def generated_at(
-        self, timezone: str = "UTC", locale: str = "Europe/London"
-    ) -> datetime:
+    def generated_at(self) -> datetime:
         """Create a datetime object from the generatedAt timestamp."""
+        timezone: str = "UTC"
+        locale: str = "Europe/London"
         generated_at: datetime = datetime.now()
         if "generatedAt" in self.response:
             generated_at = (
@@ -275,6 +275,6 @@ class Station:
     def are_services_available(self) -> bool:
         """Return a boolean response indicating whether services are available."""
         are_services_available: bool = False
-        if self.response("areServicesAvailable") is not None:
+        if self.response.get("areServicesAvailable") is not None:
             are_services_available = self.response["areServicesAvailable"]
         return are_services_available
