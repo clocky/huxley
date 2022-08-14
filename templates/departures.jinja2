@@ -28,7 +28,9 @@
   </head>
   {% macro col_std(std, index) %}
     <div class="col-2 px-0 h5 col-sm-1 px-sm-2 text-start">
-      {% if index == 0 %}<time>{{ std }}</time>{% endif %}
+      {% if index == 0 %}
+        <time>{{ std.strftime("%H:%M") }}</time>
+      {% endif %}
     </div>
   {% endmacro %}
   {#
