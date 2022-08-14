@@ -92,10 +92,10 @@
   {#
     Macro for rendering the operator column
   #}
-  {% macro col_operator(operator, operator_code, index)%}
+  {% macro col_operator(operator, operator_short_name, operator_code, index)%}
     <div class="d-none d-md-block col-md-4 col-lg-3 h5 text-end text-info"
          data-operator-code="{{ operator_code }}">
-      {% if index == 0 %}{{ operator }}{% endif %}
+      {% if index == 0 %}{{ operator_short_name }}{% endif %}
     </div>
   {% endmacro %}
   {#
@@ -143,7 +143,7 @@
         {{ col_destination(destination, loop.index0) }}
         {{ col_platform(service.platform, service.is_cancelled, service.service_type, loop.index0) }}
         {{ col_etd(service.etd, service.is_cancelled, loop.index0) }}
-        {{ col_operator(service.operator, service.operator_code, loop.index0) }}
+        {{ col_operator(service.operator, service.operator_short_name, service.operator_code, loop.index0) }}
         {{ row_cancelled(service.is_cancelled, service.cancel_reason) }}
         {{ row_delayed(service.std, service.etd, service.is_cancelled, service.delay_reason)}}
         {{ row_formation(service)}}
