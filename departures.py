@@ -37,10 +37,10 @@ def show_departures(station, show_nrcc_messages: bool):
     )
     table.caption_style = "warning"
     table.add_column("Time", width=6)
-    table.add_column("Destination", style="warning", width=40)
+    table.add_column("Destination", style="warning", width=44)
     table.add_column("Plat", justify="right", width=4)
     table.add_column("Expected", justify="right", width=10)
-    table.add_column("Operator", justify="right", style="info")
+    table.add_column("Operator", justify="right", style="info", width=16)
 
     if station.train_services:
         for service in station.train_services:
