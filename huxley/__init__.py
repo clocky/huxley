@@ -236,7 +236,7 @@ class Station:
     def train_services(self) -> list:
         """Return a list of train services for a given station."""
         train_services: list = []
-        if self.response["trainServices"] is not None:
+        if self.response.get("trainServices") is not None:
             train_services = [Service(s) for s in self.response["trainServices"]]
         return train_services
 
@@ -244,7 +244,7 @@ class Station:
     def bus_services(self) -> list:
         """Return a list of replacement bus services for a given station."""
         bus_services: list = []
-        if self.response["busServices"] is not None:
+        if self.response.get("busServices") is not None:
             bus_services = [Service(s) for s in self.response["busServices"]]
         return bus_services
 
@@ -252,7 +252,7 @@ class Station:
     def ferry_services(self) -> list:
         """Return a list of ferry services for a given station."""
         ferry_services: list = []
-        if self.response["ferryServices"] is not None:
+        if self.response.get("ferryServices") is not None:
             ferry_services = [Service(s) for s in self.response["ferryServices"]]
         return ferry_services
 
