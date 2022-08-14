@@ -158,7 +158,7 @@ class Service:
             "GW": "GWR",
             "HT": "Hull Trains",
             "HX": "Heathrow Express",
-            "IS": "Island Line",
+            "IL": "Island Line",
             "LD": "Lumo",
             "LE": "Greater Anglia",
             "LM": "West Midlands",
