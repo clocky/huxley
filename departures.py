@@ -23,7 +23,7 @@ BOOTSTRAP = Theme(
 )
 
 
-def show_departures(station):
+def show_departures(station, show_nrcc_messages: bool):
     console = Console(theme=BOOTSTRAP)
 
     table = Table(
@@ -58,16 +58,17 @@ def show_departures(station):
                     table.add_row("", f"[secondary]{service.delay_reason}[/secondary]")
     console.print(table)
 
-    if station.nrcc_messages is not None:
-        nrcc_messages: list = parse_nrcc_messages(station.nrcc_messages)
-        for message in nrcc_messages:
-            console.print(
-                message,
-                highlight=False,
-                new_line_start=True,
-                style="secondary",
-                width=80,
-            )
+    if show_nrcc_messages is True:
+        if station.nrcc_messages is not None:
+            nrcc_messages: list = parse_nrcc_messages(station.nrcc_messages)
+            for message in nrcc_messages:
+                console.print(
+                    message,
+                    highlight=False,
+                    new_line_start=True,
+                    style="secondary",
+                    width=80,
+                )
 
 
 def parse_nrcc_messages(nrcc_messages: list) -> list:
@@ -101,12 +102,35 @@ def parse_etd(service) -> str:
 
 
 @click.command()
-@click.option("--crs", default="kgx", help="CRS Code")
-@click.option("--rows", default=12, help="Number of rows")
-def departures(crs, rows):
+@click.option(
+    "-s",
+    "--station",
+    "crs",
+    required=True,
+    type=str,
+    default="kgx",
+    help="CRS code of the station",
+)
+@click.option(
+    "-r",
+    "--rows",
+    type=int,
+    show_default=True,
+    default=10,
+    help="Number of rows of services to retrieve",
+)
+@click.option(
+    "-m",
+    "--messages",
+    "show_nrcc_messages",
+    type=bool,
+    default=False,
+    help="Show NRCC messages for the station",
+)
+def departures(crs, rows, show_nrcc_messages):
     station = huxley.Station(crs)
     station.get_departures(expand=False, rows=rows)
-    show_departures(station)
+    show_departures(station, show_nrcc_messages)
 
 
 if __name__ == "__main__":
