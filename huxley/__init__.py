@@ -8,6 +8,38 @@ import requests
 from dateutil import parser, tz
 from dotenv import load_dotenv
 
+OPERATOR_CODES = {
+    "AW": "TfW",
+    "CC": "c2c",
+    "CH": "Chiltern",
+    "EM": "East Midlands",
+    "ES": "EuroStar",
+    "GC": "Grand Central",
+    "GN": "Great Northern",
+    "GR": "LNER",
+    "GW": "GWR",
+    "GX": "Gatwick Express",
+    "HT": "Hull Trains",
+    "HX": "Heathrow Express",
+    "IL": "Island Line",
+    "LD": "Lumo",
+    "LE": "Greater Anglia",
+    "LM": "West Midlands",
+    "LO": "Overground",
+    "ME": "Merseyrail",
+    "NT": "Northern",
+    "SE": "Southeastern",
+    "SN": "Southern",
+    "SR": "ScotRail",
+    "SW": "South West",
+    "TL": "ThamesLink",
+    "TP": "TransPennine",
+    "TW": "Metro",
+    "VT": "West Coast",
+    "XC": "CrossCountry",
+    "XR": "Elizabeth",
+}
+
 
 @dataclass
 class Toilet:
@@ -146,36 +178,7 @@ class Service:
     def operator_short_name(self) -> str:
         """Return the friendly name of the operator."""
         short_name: str = ""
-        OPERATOR_CODES = {
-            "AW": "TfW",
-            "CC": "c2c",
-            "CH": "Chiltern",
-            "EM": "East Midlands",
-            "ES": "EuroStar",
-            "GC": "Grand Central",
-            "GN": "Great Northern",
-            "GR": "LNER",
-            "GW": "GWR",
-            "HT": "Hull Trains",
-            "HX": "Heathrow Express",
-            "IL": "Island Line",
-            "LD": "Lumo",
-            "LE": "Greater Anglia",
-            "LM": "West Midlands",
-            "LO": "Overground",
-            "ME": "Merseyrail",
-            "NT": "Northern",
-            "SE": "Southeastern",
-            "SN": "Southern",
-            "SR": "ScotRail",
-            "SW": "South West",
-            "TL": "ThamesLink",
-            "TP": "TransPennine",
-            "TW": "Metro",
-            "VT": "West Coast",
-            "XC": "CrossCountry",
-            "XR": "Elizabeth",
-        }
+
         if self.operator_code in OPERATOR_CODES:
             short_name = OPERATOR_CODES[self.operator_code]
         else:
