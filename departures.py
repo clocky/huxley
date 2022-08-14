@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """CLI tool to show upcoming departures for a given railway station."""
-import click
 import re
+
+import click
 from rich import box
 from rich.console import Console
 from rich.table import Table

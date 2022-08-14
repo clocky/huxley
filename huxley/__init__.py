@@ -2,8 +2,8 @@
 # type: ignore [call-arg]
 import os
 from dataclasses import dataclass
-from typing import Optional
 from datetime import datetime, time
+from typing import Optional
 
 import requests
 from dateutil import parser, tz
