@@ -265,7 +265,7 @@ class Station:
     def location_name(self) -> str:
         """Return the location name for the station."""
         location_name: str = ""
-        if "locationName" in self.response:
+        if self.response.get("locationName") is not None:
             location_name = self.response["locationName"]
         else:
             location_name = f"Unknown location: '{self.crs}'"
@@ -275,6 +275,6 @@ class Station:
     def are_services_available(self) -> bool:
         """Return a boolean response indicating whether services are available."""
         are_services_available: bool = False
-        if "areServicesAvailable" in self.response:
+        if self.response("areServicesAvailable") is not None:
             are_services_available = self.response["areServicesAvailable"]
         return are_services_available
