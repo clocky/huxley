@@ -2,6 +2,7 @@
 # type: ignore [call-arg]
 import os
 from dataclasses import dataclass
+from typing import Optional
 from datetime import datetime
 
 import requests
@@ -62,7 +63,7 @@ class Coach:
     loading: int
     loading_specified: bool
     number: str
-    toilet: list
+    toilet: Optional[Toilet]
 
     def __init__(self, coach: dict):
         """Initialise a Coach object."""
