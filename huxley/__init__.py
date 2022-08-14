@@ -3,7 +3,7 @@
 import os
 from dataclasses import dataclass
 from typing import Optional
-from datetime import datetime
+import datetime
 
 import requests
 from dateutil import parser, tz
@@ -128,11 +128,11 @@ class Destination:
 class Service:
     """Define a service, such as a train, bus or ferry."""
 
-    eta: datetime
-    sta: datetime
+    eta: datetime.time
+    sta: datetime.time
     etd: str
-    std: datetime
-    formation: list
+    std: datetime.time
+    formation: Optional[Formation]
     is_circular_route: bool
     is_cancelled: bool
     is_reverse_formation: bool
@@ -150,19 +150,18 @@ class Service:
         """Intialise a Service object."""
         self.destination = [Destination(d) for d in service["destination"]]
         self.origin = [Destination(o) for o in service["origin"]]
-        if service["formation"] is not None:
+
+        if service.get("formation") is not None:
             self.formation = Formation(service["formation"])
-        else:
-            self.formation = []
 
         if service.get("eta") is not None:
-            self.eta = datetime.strptime(service["eta"], "%H:%M").time()
+            self.eta = datetime.datetime.strptime(service["eta"], "%H:%M").time()
 
         if service.get("sta") is not None:
-            self.sta = datetime.strptime(service["sta"], "%H:%M").time()
+            self.sta = datetime.datetime.strptime(service["sta"], "%H:%M").time()
 
         if service.get("std") is not None:
-            self.std = datetime.strptime(service["std"], "%H:%M").time()
+            self.std = datetime.datetime.strptime(service["std"], "%H:%M").time()
 
         self.etd = service["etd"]
         self.is_circular_route = service["isCircularRoute"]
@@ -220,11 +219,11 @@ class Station:
         self.get_data("arrivals", expand=expand, rows=rows)
 
     @property
-    def generated_at(self) -> datetime:
+    def generated_at(self) -> datetime.datetime:
         """Create a datetime object from the generatedAt timestamp."""
         timezone: str = "UTC"
         locale: str = "Europe/London"
-        generated_at: datetime = datetime.now()
+        generated_at: datetime.datetime = datetime.datetime.now()
         if "generatedAt" in self.response:
             generated_at = (
                 parser.parse(self.response["generatedAt"])
