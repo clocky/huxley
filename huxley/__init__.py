@@ -93,10 +93,10 @@ class Destination:
 class Service:
     """Define a service, such as a train, bus or ferry."""
 
-    eta: str
-    sta: str
+    eta: datetime
+    sta: datetime
     etd: str
-    std: str
+    std: datetime
     formation: list
     is_circular_route: bool
     is_cancelled: bool
@@ -119,9 +119,16 @@ class Service:
             self.formation = Formation(service["formation"])
         else:
             self.formation = []
-        self.sta = service["sta"]
-        self.eta = service["eta"]
-        self.std = service["std"]
+
+        if service.get("eta") is not None:
+            self.eta = datetime.strptime(service["eta"], "%H:%M").time()
+
+        if service.get("sta") is not None:
+            self.sta = datetime.strptime(service["sta"], "%H:%M").time()
+
+        if service.get("std") is not None:
+            self.std = datetime.strptime(service["std"], "%H:%M").time()
+
         self.etd = service["etd"]
         self.is_circular_route = service["isCircularRoute"]
         self.is_cancelled = service["isCancelled"]
@@ -135,8 +142,47 @@ class Service:
         self.service_id_guid = service["serviceIdGuid"]
         self.service_type = service["serviceType"]
 
+    @property
+    def operator_short_name(self) -> str:
+        """Return the friendly name of the operator."""
+        short_name: str = ""
+        OPERATOR_CODES = {
+            "AW": "TfW",
+            "CC": "c2c",
+            "CH": "Chiltern",
+            "EM": "East Midlands",
+            "ES": "EuroStar",
+            "GC": "Grand Central",
+            "GN": "Great Northern",
+            "GR": "LNER",
+            "GW": "GWR",
+            "HT": "Hull Trains",
+            "HX": "Heathrow Express",
+            "LD": "Lumo",
+            "LE": "Greater Anglia",
+            "LM": "West Midlands",
+            "LO": "Overground",
+            "ME": "Merseyrail",
+            "NT": "Northern",
+            "SE": "Southeastern",
+            "SN": "Southern",
+            "SR": "ScotRail",
+            "SW": "South West",
+            "TL": "ThamesLink",
+            "TP": "TransPennine",
+            "TW": "Metro",
+            "VT": "West Coast",
+            "XC": "CrossCountry",
+            "XR": "Elizabeth",
+        }
+        if self.operator_code in OPERATOR_CODES:
+            short_name = OPERATOR_CODES[self.operator_code]
+        else:
+            short_name = f"[{self.operator_code}] {self.operator}"
+        return short_name
 
-class Huxley:
+
+class Station:
     """Interface to the Huxley API."""
 
     def __init__(self, crs):
