@@ -3,7 +3,7 @@
 import os
 from dataclasses import dataclass
 from typing import Optional
-import datetime
+from datetime import datetime, time
 
 import requests
 from dateutil import parser, tz
@@ -128,10 +128,10 @@ class Destination:
 class Service:
     """Define a service, such as a train, bus or ferry."""
 
-    eta: datetime.time
-    sta: datetime.time
+    eta: time
+    sta: time
     etd: str
-    std: datetime.time
+    std: time
     formation: Optional[Formation]
     is_circular_route: bool
     is_cancelled: bool
@@ -155,13 +155,13 @@ class Service:
             self.formation = Formation(service["formation"])
 
         if service.get("eta") is not None:
-            self.eta = datetime.datetime.strptime(service["eta"], "%H:%M").time()
+            self.eta = datetime.strptime(service["eta"], "%H:%M").time()
 
         if service.get("sta") is not None:
-            self.sta = datetime.datetime.strptime(service["sta"], "%H:%M").time()
+            self.sta = datetime.strptime(service["sta"], "%H:%M").time()
 
         if service.get("std") is not None:
-            self.std = datetime.datetime.strptime(service["std"], "%H:%M").time()
+            self.std = datetime.strptime(service["std"], "%H:%M").time()
 
         self.etd = service["etd"]
         self.is_circular_route = service["isCircularRoute"]
@@ -219,11 +219,11 @@ class Station:
         self.get_data("arrivals", expand=expand, rows=rows)
 
     @property
-    def generated_at(self) -> datetime.datetime:
+    def generated_at(self) -> datetime:
         """Create a datetime object from the generatedAt timestamp."""
         timezone: str = "UTC"
         locale: str = "Europe/London"
-        generated_at: datetime.datetime = datetime.datetime.now()
+        generated_at: datetime = datetime.now()
         if "generatedAt" in self.response:
             generated_at = (
                 parser.parse(self.response["generatedAt"])
