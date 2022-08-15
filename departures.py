@@ -48,7 +48,7 @@ def show_departures(station, show_nrcc_messages: bool):
             std: str = service.std.strftime("%H:%M")
             platform: str = service.platform
             operator: str = service.operator_short_name
-            destination: str = parse_destination(service)
+            destination: str = parse_destinations(service)
             etd: str = parse_etd(service)
             table.add_row(std, destination, platform, etd, operator)
 
@@ -59,6 +59,14 @@ def show_departures(station, show_nrcc_messages: bool):
             if hasattr(service, "delay_reason"):
                 if service.delay_reason is not None and service.cancel_reason is None:
                     table.add_row("", f"[secondary]{service.delay_reason}[/secondary]")
+
+            if hasattr(service, "formation"):
+                if service.is_cancelled is False or service.delay_reason == "":
+                    count: int = len(service.formation.coaches)
+                    table.add_row(
+                        "",
+                        f"[secondary]This train is formed of {count} coaches[/secondary]",
+                    )
     console.print(table)
 
     if show_nrcc_messages is True:
@@ -71,6 +79,7 @@ def show_departures(station, show_nrcc_messages: bool):
                     new_line_start=True,
                     style="secondary",
                     width=80,
+                    justify="center",
                 )
 
 
@@ -84,15 +93,30 @@ def parse_nrcc_messages(nrcc_messages: list) -> list:
     return messages
 
 
-def parse_destination(service) -> str:
+def parse_destinations(service) -> str:
     """Show the destination of a service, including any via points."""
-    destination: str = service.destination
+    destinations: list = []
     for d in service.destination:
-        destination = f"{d.location_name}"
-        if hasattr(d, "via"):
-            if d.via is not None:
-                destination = f"{destination} [white]{d.via}[/white]"
-    return destination
+        destination = d.location_name
+        if hasattr(d, "via") and d.via is not None:
+            destination = f"{d.location_name} [white]{d.via}[/white]"
+        else:
+            destination = d.location_name
+        destinations.append(destination)
+    parsed: str = ""
+    match len(destinations):
+        case 1:
+            parsed = f"{destinations[0]}"
+        case 2:
+            parsed = f"{destinations[0]} and {destinations[1]}"
+        case _:
+            parsed = (
+                "[light],[/light] ".join(destinations[:-1])
+                + " [light]and[/light] "
+                + destinations[-1]
+            )
+
+    return parsed
 
 
 def parse_etd(service) -> str:
