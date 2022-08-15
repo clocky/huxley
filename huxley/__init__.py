@@ -13,6 +13,7 @@ OPERATOR_CODES = {
     "AW": "TfW",
     "CC": "c2c",
     "CH": "Chiltern",
+    "CS": "Caledonian",
     "EM": "East Midlands",
     "ES": "EuroStar",
     "GC": "Grand Central",
