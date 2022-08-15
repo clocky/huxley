@@ -25,16 +25,18 @@ BOOTSTRAP = Theme(
 )
 
 
-def show_departures(station, show_nrcc_messages: bool):
+def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
     """Render a Rich table of departures for a railway station."""
     console = Console(theme=BOOTSTRAP)
 
     table = Table(
         style="secondary",
         show_header=True,
-        box=box.SQUARE,
+        box=box.SIMPLE_HEAD,
         title=station.location_name,
-        title_style="light on primary",
+        title_style="primary",
+        pad_edge=False,
+        show_lines=False,
     )
     table.caption_style = "warning"
     table.add_column("Time", width=6)
@@ -50,25 +52,25 @@ def show_departures(station, show_nrcc_messages: bool):
             operator: str = service.operator_short_name
             destination: str = parse_destinations(service)
             etd: str = parse_etd(service)
-            table.add_row(std, destination, platform, etd, operator)
 
+            # If the cancel reason is not empty, add it to the destination.
             if hasattr(service, "cancel_reason"):
-                if service.cancel_reason is not None and service.is_cancelled is True:
-                    table.add_row("", f"[secondary]{service.cancel_reason}[/secondary]")
+                if service.is_cancelled is True and service.cancel_reason is not None:
+                    destination += f"\n[secondary]{service.cancel_reason}[/secondary]"
 
+            # If the delay reason is not empty, add it to the destination.
             if hasattr(service, "delay_reason"):
                 if service.delay_reason is not None and service.cancel_reason is None:
-                    table.add_row("", f"[secondary]{service.delay_reason}[/secondary]")
+                    destination += f"\n[secondary]{service.delay_reason}[/secondary]"
 
-            if hasattr(service, "formation"):
-                count: str = "◢"
-                if service.is_cancelled is False or service.delay_reason == "":
-                    carriage: str = "■"
-                    for coach in service.formation.coaches:
-                        tint = "primary" if coach.coach_class == "First" else "light"
-                        count = count + f"[{tint}]{carriage}[/{tint}]"
-                    count = count + f" {str(len(service.formation.coaches))}"
-                    table.add_row("", f"{count}", style="light")
+            # If formation is not empty, add it to the table.
+            if show_formation:
+                if hasattr(service, "formation"):
+                    destination += f"\n[light]{parse_formation(service)}[/light]"
+
+            # Add everything to the table
+            table.add_row(std, destination, platform, etd, operator)
+
     console.print(table)
 
     if show_nrcc_messages is True:
@@ -83,6 +85,17 @@ def show_departures(station, show_nrcc_messages: bool):
                     width=96,
                     justify="center",
                 )
+
+
+def parse_formation(service) -> str:
+    formation: str = "◢"
+    if service.is_cancelled is False or service.delay_reason == "":
+        carriage: str = "■"
+        for coach in service.formation.coaches:
+            tint = "primary" if coach.coach_class == "First" else "light"
+            formation = formation + f"[{tint}]{carriage}[/{tint}]"
+        formation = formation + f" {str(len(service.formation.coaches))}"
+    return formation
 
 
 def parse_nrcc_messages(nrcc_messages: list) -> list:
@@ -160,11 +173,20 @@ def parse_etd(service) -> str:
     default=False,
     help="Show NRCC messages for the station",
 )
-def departures(crs, rows, show_nrcc_messages):
+@click.option(
+    "-f",
+    "--formation",
+    "show_formation",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Show formation of each train service",
+)
+def departures(crs, rows, show_nrcc_messages, show_formation):
     """CLI tool to show departures for a railway station."""
     station = huxley.Station(crs)
     station.get_departures(expand=False, rows=rows)
-    show_departures(station, show_nrcc_messages)
+    show_departures(station, show_nrcc_messages, show_formation)
 
 
 if __name__ == "__main__":
