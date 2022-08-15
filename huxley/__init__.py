@@ -1,6 +1,7 @@
 """Read and parse information from the Huxley API for National Rail services."""
 # type: ignore [call-arg]
 import os
+import json
 from dataclasses import dataclass
 from datetime import datetime, time
 from typing import Optional
@@ -203,19 +204,24 @@ class Station:
         self.response: dict = {}
         self.url: str = ""
 
-    def get_data(self, endpoint: str, expand: bool = False, rows: int = 10):
+    def get_data(
+        self, endpoint: str, expand: bool = False, rows: int = 10, local: bool = False
+    ) -> bool:
         """Use Requests to retrieve JSON data from the Huxley API."""
-        self.payload: dict = {"accessToken": self.access_token, "expand": expand}
-        self.endpoint: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
-        r = requests.get(self.endpoint, params=self.payload)
-        self.url = r.url
-        if r.status_code == 200:
-            self.response = r.json()
+        if not local:
+            self.payload: dict = {"accessToken": self.access_token, "expand": expand}
+            self.endpoint: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
+            r = requests.get(self.endpoint, params=self.payload)
+            self.url = r.url
+            if r.status_code == 200:
+                self.response = r.json()
+        else:
+            self.response = json.load(open(f"./data/{self.crs}.json"))
         return True
 
-    def get_departures(self, expand: bool = False, rows: int = 8):
+    def get_departures(self, expand: bool = False, rows: int = 8, local: bool = False):
         """Request a list of departures for a given railway station."""
-        self.get_data("departures", expand=expand, rows=rows)
+        self.get_data("departures", expand=expand, rows=rows, local=local)
 
     def get_arrivals(self, expand: bool = False, rows: int = 8):
         """Request a list of arrivals for a given railway station."""
