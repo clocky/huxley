@@ -32,15 +32,15 @@ def show_departures(station, show_nrcc_messages: bool):
     table = Table(
         style="secondary",
         show_header=True,
-        box=box.SIMPLE_HEAD,
+        box=box.SQUARE,
         title=station.location_name,
         title_style="light on primary",
     )
     table.caption_style = "warning"
     table.add_column("Time", width=6)
-    table.add_column("Destination", style="warning", width=44)
+    table.add_column("Destination", style="warning", width=45)
     table.add_column("Plat", justify="right", width=4)
-    table.add_column("Expected", justify="right", width=10)
+    table.add_column("Expected", justify="right", width=9)
     table.add_column("Operator", justify="right", style="info", width=16)
 
     if station.train_services:
@@ -61,12 +61,14 @@ def show_departures(station, show_nrcc_messages: bool):
                     table.add_row("", f"[secondary]{service.delay_reason}[/secondary]")
 
             if hasattr(service, "formation"):
+                count: str = "◢"
                 if service.is_cancelled is False or service.delay_reason == "":
-                    count: int = len(service.formation.coaches)
-                    table.add_row(
-                        "",
-                        f"[secondary]This train is formed of {count} coaches[/secondary]",
-                    )
+                    carriage: str = "■"
+                    for coach in service.formation.coaches:
+                        tint = "primary" if coach.coach_class == "First" else "light"
+                        count = count + f"[{tint}]{carriage}[/{tint}]"
+                    count = count + f" {str(len(service.formation.coaches))}"
+                    table.add_row("", f"{count}", style="light")
     console.print(table)
 
     if show_nrcc_messages is True:
@@ -78,7 +80,7 @@ def show_departures(station, show_nrcc_messages: bool):
                     highlight=False,
                     new_line_start=True,
                     style="secondary",
-                    width=80,
+                    width=96,
                     justify="center",
                 )
 
