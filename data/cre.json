@@ -1,0 +1,369 @@
+{
+    "trainServices": [
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "London Euston",
+                    "crs": "EUS",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Aberdeen",
+                    "crs": "ABD",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                },
+                {
+                    "locationName": "Inverness",
+                    "crs": "INV",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                },
+                {
+                    "locationName": "Fort William",
+                    "crs": "FTW",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "CS300105",
+            "serviceIdPercentEncoded": "MjbZgpCXo9KB%2FECgiaa6SA%3D%3D",
+            "serviceIdGuid": "82d93632-9790-d2a3-81fc-40a089a6ba48",
+            "serviceIdUrlSafe": "MjbZgpCXo9KB_ECgiaa6SA",
+            "sta": null,
+            "eta": null,
+            "std": "23:36",
+            "etd": "On time",
+            "platform": "6",
+            "operator": "Caledonian Sleeper",
+            "operatorCode": "CS",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "MjbZgpCXo9KB/ECgiaa6SA==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "Crewe",
+                    "crs": "CRE",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Chester",
+                    "crs": "CTR",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": null,
+            "serviceIdPercentEncoded": "Cat5mov6Z8SZcBLP7wnvhQ%3D%3D",
+            "serviceIdGuid": "9a79ab09-fa8b-c467-9970-12cfef09ef85",
+            "serviceIdUrlSafe": "Cat5mov6Z8SZcBLP7wnvhQ",
+            "sta": null,
+            "eta": null,
+            "std": "23:39",
+            "etd": "On time",
+            "platform": "9",
+            "operator": "Transport for Wales",
+            "operatorCode": "AW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "Cat5mov6Z8SZcBLP7wnvhQ==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": {
+                "avgLoading": 0,
+                "avgLoadingSpecified": false,
+                "coaches": [
+                    {
+                        "coachClass": "First",
+                        "toilet": null,
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "1"
+                    },
+                    {
+                        "coachClass": "First",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Accessible"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "2"
+                    },
+                    {
+                        "coachClass": "First",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Standard"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "3"
+                    },
+                    {
+                        "coachClass": "First",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Standard"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "4"
+                    },
+                    {
+                        "coachClass": "Standard",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Standard"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "5"
+                    },
+                    {
+                        "coachClass": "Standard",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Accessible"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "6"
+                    },
+                    {
+                        "coachClass": "Standard",
+                        "toilet": null,
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "7"
+                    },
+                    {
+                        "coachClass": "Standard",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Accessible"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "8"
+                    },
+                    {
+                        "coachClass": "Standard",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Standard"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "9"
+                    }
+                ]
+            },
+            "origin": [
+                {
+                    "locationName": "London Euston",
+                    "crs": "EUS",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Liverpool Lime Street",
+                    "crs": "LIV",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "VT827200",
+            "serviceIdPercentEncoded": "hI8J%2BUx5CrC8DlwVJeaN3Q%3D%3D",
+            "serviceIdGuid": "f9098f84-794c-b00a-bc0e-5c1525e68ddd",
+            "serviceIdUrlSafe": "hI8J-Ux5CrC8DlwVJeaN3Q",
+            "sta": null,
+            "eta": null,
+            "std": "23:47",
+            "etd": "23:54",
+            "platform": "6",
+            "operator": "Avanti West Coast",
+            "operatorCode": "VT",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": null,
+            "delayReason": null,
+            "serviceID": "hI8J+Ux5CrC8DlwVJeaN3Q==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": null,
+            "origin": [
+                {
+                    "locationName": "Crewe",
+                    "crs": "CRE",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Chester",
+                    "crs": "CTR",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": null,
+            "serviceIdPercentEncoded": "haRGUWUYh2PPn93%2FiCxkLA%3D%3D",
+            "serviceIdGuid": "5146a485-1865-6387-cf9f-ddff882c642c",
+            "serviceIdUrlSafe": "haRGUWUYh2PPn93_iCxkLA",
+            "sta": null,
+            "eta": null,
+            "std": "00:12",
+            "etd": "On time",
+            "platform": "12",
+            "operator": "Transport for Wales",
+            "operatorCode": "AW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": "This train has been cancelled because of a shortage of train crew",
+            "delayReason": "This train has been delayed by a shortage of train crew",
+            "serviceID": "haRGUWUYh2PPn93/iCxkLA==",
+            "adhocAlerts": null
+        },
+        {
+            "formation": {
+                "avgLoading": 0,
+                "avgLoadingSpecified": false,
+                "coaches": [
+                    {
+                        "coachClass": "Standard",
+                        "toilet": {
+                            "status": 1,
+                            "value": "Accessible"
+                        },
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "1"
+                    },
+                    {
+                        "coachClass": "Standard",
+                        "toilet": null,
+                        "loading": 0,
+                        "loadingSpecified": false,
+                        "number": "2"
+                    }
+                ]
+            },
+            "origin": [
+                {
+                    "locationName": "Birmingham New Street",
+                    "crs": "BHM",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "destination": [
+                {
+                    "locationName": "Chester",
+                    "crs": "CTR",
+                    "via": null,
+                    "futureChangeTo": null,
+                    "assocIsCancelled": false
+                }
+            ],
+            "currentOrigins": null,
+            "currentDestinations": null,
+            "rsid": "AW326200",
+            "serviceIdPercentEncoded": "gSP6uDVkJh7%2BZs7K0Nbkdw%3D%3D",
+            "serviceIdGuid": "b8fa2381-6435-1e26-fe66-cecad0d6e477",
+            "serviceIdUrlSafe": "gSP6uDVkJh7-Zs7K0Nbkdw",
+            "sta": null,
+            "eta": null,
+            "std": "00:22",
+            "etd": "On time",
+            "platform": "6",
+            "operator": "Transport for Wales",
+            "operatorCode": "AW",
+            "isCircularRoute": false,
+            "isCancelled": false,
+            "filterLocationCancelled": false,
+            "serviceType": 0,
+            "length": 0,
+            "detachFront": false,
+            "isReverseFormation": false,
+            "cancelReason": "This train has been cancelled because of a shortage of train crew",
+            "delayReason": "This train has been delayed by a shortage of train crew",
+            "serviceID": "gSP6uDVkJh7+Zs7K0Nbkdw==",
+            "adhocAlerts": null
+        }
+    ],
+    "busServices": null,
+    "ferryServices": null,
+    "generatedAt": "2022-08-14T22:31:31.6447072+00:00",
+    "locationName": "Crewe",
+    "crs": "CRE",
+    "filterLocationName": null,
+    "filtercrs": null,
+    "filterType": 0,
+    "nrccMessages": [
+        {
+            "value": "Disruption between Birmingham New Street and Walsall / Birmingham International due to damage to the overhead eletric wires. More details can be found in <a href=\"http://nationalrail.co.uk/service_disruptions/303369.aspx\">Latest Travel News</a>"
+        }
+    ],
+    "platformAvailable": true,
+    "areServicesAvailable": true
+}
