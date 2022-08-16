@@ -7,6 +7,7 @@ import click
 import html
 from rich import box
 from rich.console import Console
+from rich.padding import Padding
 from rich.table import Table
 from rich.theme import Theme
 
@@ -79,11 +80,10 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
             nrcc_messages: list = parse_nrcc_messages(station.nrcc_messages)
             for message in nrcc_messages:
                 console.print(
-                    message,
+                    Padding(message, (0, 16)),
                     highlight=False,
-                    new_line_start=True,
-                    style="secondary",
-                    width=96,
+                    style="info",
+                    width=94,
                     justify="center",
                 )
 
@@ -105,7 +105,8 @@ def parse_nrcc_messages(nrcc_messages: list) -> list:
     for message in nrcc_messages:
         message["value"] = re.sub(r"<.*?>", "", message["value"])
         message["value"] = re.sub(r"(\r\n|\n|\r)", "", message["value"])
-        messages.append(html.unescape(message["value"]))
+        message["value"] = html.unescape(message["value"])
+        messages.append(message["value"])
     return messages
 
 
