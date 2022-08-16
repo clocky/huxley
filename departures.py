@@ -4,6 +4,7 @@
 import re
 
 import click
+import html
 from rich import box
 from rich.console import Console
 from rich.table import Table
@@ -104,7 +105,7 @@ def parse_nrcc_messages(nrcc_messages: list) -> list:
     for message in nrcc_messages:
         message["value"] = re.sub(r"<.*?>", "", message["value"])
         message["value"] = re.sub(r"(\r\n|\n|\r)", "", message["value"])
-        messages.append(message["value"])
+        messages.append(html.unescape(message["value"]))
     return messages
 
 
