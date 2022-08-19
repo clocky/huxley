@@ -268,7 +268,10 @@ class Station:
     @property
     def nrcc_messages(self) -> dict:
         """Retrieve any National Rail Communication Center message for the station."""
-        return self.response["nrccMessages"]
+        nrcc_messages: dict = {}
+        if self.response.get("nrccMessages") is not None:
+            nrcc_messages = self.response["nrccMessages"]
+        return nrcc_messages
 
     @property
     def location_name(self) -> str:
