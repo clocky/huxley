@@ -193,10 +193,20 @@ def parse_etd(service) -> str:
     default=False,
     help="Use local JSON data for debugging",
 )
-def departures(crs, rows, show_nrcc_messages, show_formation, local):
+@click.option(
+    "-a",
+    "--api",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Show API response for debugging",
+)
+def departures(crs, rows, show_nrcc_messages, show_formation, local, api):
     """CLI tool to show departures for a railway station."""
     station = huxley.Station(crs)
     station.get_departures(expand=False, rows=rows, local=local)
+    if api:
+        print(station.url)
     show_departures(station, show_nrcc_messages, show_formation)
 
 
