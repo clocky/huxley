@@ -9,39 +9,7 @@ from typing import Optional
 import requests
 from dateutil import parser, tz
 from dotenv import load_dotenv
-
-OPERATOR_CODES = {
-    "AW": "TfW",
-    "CC": "c2c",
-    "CH": "Chiltern",
-    "CS": "Caledonian",
-    "EM": "East Midlands",
-    "ES": "EuroStar",
-    "GC": "Grand Central",
-    "GN": "Great Northern",
-    "GR": "LNER",
-    "GW": "GWR",
-    "GX": "Gatwick Express",
-    "HT": "Hull Trains",
-    "HX": "Heathrow Express",
-    "IL": "Island Line",
-    "LD": "Lumo",
-    "LE": "Greater Anglia",
-    "LM": "West Midlands",
-    "LO": "Overground",
-    "ME": "Merseyrail",
-    "NT": "Northern",
-    "SE": "Southeastern",
-    "SN": "Southern",
-    "SR": "ScotRail",
-    "SW": "South West",
-    "TL": "ThamesLink",
-    "TP": "TransPennine",
-    "TW": "Metro",
-    "VT": "West Coast",
-    "XC": "CrossCountry",
-    "XR": "Elizabeth",
-}
+from .codes import OPERATOR_CODES
 
 
 @dataclass
@@ -215,9 +183,16 @@ class Station:
             self.url = r.url
             if r.status_code == 200:
                 self.response = r.json()
+                return True
+            else:
+                return False
         else:
-            self.response = json.load(open(f"./data/{self.crs}.json"))
-        return True
+            self.response = {}
+            try:
+                self.response = json.load(open(f"./data/{self.crs}.json"))
+                return True
+            except FileNotFoundError:
+                return False
 
     def get_departures(self, expand: bool = False, rows: int = 8, local: bool = False):
         """Request a list of departures for a given railway station."""

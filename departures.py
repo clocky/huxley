@@ -93,6 +93,7 @@ def parse_formation(service) -> str:
     if service.is_cancelled is False or service.delay_reason == "":
         carriage: str = "■"
         for coach in service.formation.coaches:
+            carriage = "■" if coach.toilet and coach.toilet.status == 1 else "◻"
             tint = "primary" if coach.coach_class == "First" else "light"
             formation = formation + f"[{tint}]{carriage}[/{tint}]"
         formation = formation + f" {str(len(service.formation.coaches))}"
@@ -184,10 +185,18 @@ def parse_etd(service) -> str:
     default=False,
     help="Show formation of each train service",
 )
-def departures(crs, rows, show_nrcc_messages, show_formation):
+@click.option(
+    "-l",
+    "--local",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Use local JSON data for debugging",
+)
+def departures(crs, rows, show_nrcc_messages, show_formation, local):
     """CLI tool to show departures for a railway station."""
     station = huxley.Station(crs)
-    station.get_departures(expand=False, rows=rows)
+    station.get_departures(expand=False, rows=rows, local=local)
     show_departures(station, show_nrcc_messages, show_formation)
 
 
