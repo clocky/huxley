@@ -4,7 +4,7 @@ import os
 import json
 from dataclasses import dataclass
 from datetime import datetime, time
-from typing import Optional
+from typing import Optional, List
 
 import requests
 from dateutil import parser, tz
@@ -68,13 +68,14 @@ class Formation:
 
     avg_loading: int
     avg_loading_specified: bool
-    coaches: list
+    coaches: list = List[Coach]
 
     def __init__(self, formation: dict):
         """Define a train formation, including the coaches."""
         self.avg_loading = formation["avgLoading"]
         self.avg_loading_specified = formation["avgLoadingSpecified"]
-        self.coaches = [Coach(d) for d in formation["coaches"]]
+        if(hasattr(formation, "coaches")):
+            self.coaches = [Coach(d) for d in formation["coaches"]]
 
 
 @dataclass
