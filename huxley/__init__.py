@@ -2,7 +2,7 @@
 # type: ignore [call-arg]
 import os
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, time
 from typing import Optional, List
 
@@ -68,13 +68,13 @@ class Formation:
 
     avg_loading: int
     avg_loading_specified: bool
-    coaches: list = List[Coach]
+    coaches: list
 
     def __init__(self, formation: dict):
         """Define a train formation, including the coaches."""
         self.avg_loading = formation["avgLoading"]
         self.avg_loading_specified = formation["avgLoadingSpecified"]
-        if(hasattr(formation, "coaches")):
+        if formation.get("coaches") is not None:
             self.coaches = [Coach(d) for d in formation["coaches"]]
 
 

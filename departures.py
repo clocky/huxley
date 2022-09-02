@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """CLI tool to show upcoming departures for a given railway station."""
 import re
@@ -67,7 +67,9 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
 
             # If formation is not empty, add it to the table.
             if show_formation:
-                if hasattr(service, "formation"):
+                if hasattr(service, "formation") and hasattr(
+                    service.formation, "coaches"
+                ):
                     destination += f"\n[light]{parse_formation(service)}[/light]"
 
             # Add everything to the table
@@ -89,15 +91,20 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
 
 
 def parse_formation(service) -> str:
-    formation: str = "◢"
-    if service.is_cancelled is False or service.delay_reason == "":
-        carriage: str = "■"
-        for coach in service.formation.coaches:
-            carriage = "■" if coach.toilet and coach.toilet.status == 1 else "◻"
-            tint = "primary" if coach.coach_class == "First" else "light"
-            formation = formation + f"[{tint}]{carriage}[/{tint}]"
-        formation = formation + f" {str(len(service.formation.coaches))}"
-    return formation
+    """Parse the formation of a service, adding color hints."""
+    diagram: str = ""
+    carriage: str = "■"
+    if hasattr(service.formation, "coaches"):
+        if service.is_cancelled is False or service.delay_reason == "":
+            diagram = "◢"
+            for coach in service.formation.coaches:
+                carriage = "■" if coach.toilet and coach.toilet.status == 1 else "◻"
+                tint = "primary" if coach.coach_class == "First" else "light"
+                diagram = diagram + f"[{tint}]{carriage}[/{tint}]"
+            diagram = diagram + f" {str(len(service.formation.coaches))}"
+        else:
+            diagram = "[secondary]This train has an unknown formation[/secondary]"
+    return diagram
 
 
 def parse_nrcc_messages(nrcc_messages: list) -> list:
@@ -126,11 +133,11 @@ def parse_destinations(service) -> str:
         case 1:
             parsed = f"{destinations[0]}"
         case 2:
-            parsed = f"{destinations[0]} and {destinations[1]}"
+            parsed = f"{destinations[0]} [secondary]and[/secondary] {destinations[1]}"
         case _:
             parsed = (
-                "[light],[/light] ".join(destinations[:-1])
-                + " [light]and[/light] "
+                "[secondary],[/secondary] ".join(destinations[:-1])
+                + " [secondary]and[/secondary] "
                 + destinations[-1]
             )
 
