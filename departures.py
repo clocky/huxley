@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """CLI tool to show upcoming departures for a given railway station."""
 import re
-from unittest.mock import patch
 
 import click
 import html
@@ -68,7 +67,7 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
 
             # If formation is not empty, add it to the table.
             if show_formation:
-                if hasattr(service, "formation") and service.formation is not None:
+                if hasattr(service, "formation") and service.is_cancelled is False:
                     destination += f"\n[light]{parse_formation(service)}[/light]"
 
             # Add everything to the table
@@ -95,14 +94,13 @@ def parse_formation(service) -> str:
     carriage: str = "■"
     if service.formation.coaches is not None:
         if service.is_cancelled is False or service.delay_reason == "":
-            diagram = "◢"
+            diagram += "◢"
+            coaches: int = len(service.formation.coaches)
             for coach in service.formation.coaches:
                 carriage = "■" if coach.toilet and coach.toilet.status == 1 else "◻"
                 tint = "primary" if coach.coach_class == "First" else "light"
                 diagram = diagram + f"[{tint}]{carriage}[/{tint}]"
-            diagram = diagram + f" {str(len(service.formation.coaches))}"
-        else:
-            diagram = "[secondary]This train has an unknown formation[/secondary]"
+            diagram = diagram + f" {coaches}"
     return diagram
 
 
