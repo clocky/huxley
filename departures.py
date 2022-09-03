@@ -65,10 +65,13 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
                 if service.delay_reason is not None and service.cancel_reason is None:
                     destination += f"\n[secondary]{service.delay_reason}[/secondary]"
 
-            # If formation is not empty, add it to the table.
+            # If formation exists, add it to the table.
             if show_formation:
                 if hasattr(service, "formation") and service.is_cancelled is False:
-                    destination += f"\n[light]{parse_formation(service)}[/light]"
+                    formation: str = parse_formation(service)
+                    # Only add the formation if it's not an empty string.
+                    if formation:
+                        destination += f"\n[light]{formation}[/light]"
 
             # Add everything to the table
             table.add_row(std, destination, platform, etd, operator)
