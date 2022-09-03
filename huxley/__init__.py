@@ -68,7 +68,7 @@ class Formation:
 
     avg_loading: int
     avg_loading_specified: bool
-    coaches: list
+    coaches: Optional[List[Coach]] = None
 
     def __init__(self, formation: dict):
         """Define a train formation, including the coaches."""
