@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """CLI tool to show upcoming departures for a given railway station."""
 import re
+from unittest.mock import patch
 
 import click
 import html
@@ -50,7 +51,7 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
     if station.train_services:
         for service in station.train_services:
             std: str = service.std.strftime("%H:%M")
-            platform: str = service.platform
+            platform: str = parse_platform(service)
             operator: str = service.operator_short_name
             destination: str = parse_destinations(service)
             etd: str = parse_etd(service)
@@ -154,6 +155,15 @@ def parse_etd(service) -> str:
     elif service.etd != service.std:
         etd = f"[warning]{etd}[/warning]"
     return etd
+
+
+def parse_platform(service) -> str:
+    platform: str = ""
+    if service.platform == None:
+        platform = "—"
+    else:
+        platform = service.platform
+    return platform
 
 
 @click.command()
