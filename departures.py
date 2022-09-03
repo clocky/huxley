@@ -67,10 +67,7 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
 
             # If formation is not empty, add it to the table.
             if show_formation:
-                if (
-                    hasattr(service, "formation")
-                    and service.formation.coaches is not None
-                ):
+                if hasattr(service, "formation") and service.formation is not None:
                     destination += f"\n[light]{parse_formation(service)}[/light]"
 
             # Add everything to the table
@@ -152,6 +149,8 @@ def parse_etd(service) -> str:
         etd = f"[success]{etd}[/success]"
     elif service.etd == "Cancelled" and service.is_cancelled is True:
         etd = f"[danger]{etd}[/danger]"
+    elif service.etd == None:
+        etd = f"—"
     elif service.etd != service.std:
         etd = f"[warning]{etd}[/warning]"
     return etd
