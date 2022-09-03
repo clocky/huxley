@@ -67,8 +67,9 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
 
             # If formation is not empty, add it to the table.
             if show_formation:
-                if hasattr(service, "formation") and hasattr(
-                    service.formation, "coaches"
+                if (
+                    hasattr(service, "formation")
+                    and service.formation.coaches is not None
                 ):
                     destination += f"\n[light]{parse_formation(service)}[/light]"
 
@@ -94,7 +95,7 @@ def parse_formation(service) -> str:
     """Parse the formation of a service, adding color hints."""
     diagram: str = ""
     carriage: str = "■"
-    if hasattr(service.formation, "coaches"):
+    if service.formation.coaches is not None:
         if service.is_cancelled is False or service.delay_reason == "":
             diagram = "◢"
             for coach in service.formation.coaches:
