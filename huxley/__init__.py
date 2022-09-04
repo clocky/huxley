@@ -29,11 +29,11 @@ class Toilet:
 class Coach:
     """A class to represent a train coach."""
 
-    coach_class: str
-    loading: int
-    loading_specified: bool
     number: str
+    coach_class: str
     toilet: Optional[Toilet]
+    loading: int = 0
+    loading_specified: bool = False
 
     def __init__(self, coach: dict):
         """Initialise a Coach object."""
@@ -52,9 +52,9 @@ class Point:
 
     location_name: str
     crs: str
-    st: str
-    et: str
-    at: str
+    st: time
+    et: time | str
+    at: time
     is_cancelled: bool
     length: int
     detach_front: bool
@@ -103,7 +103,7 @@ class Service:
 
     eta: time
     sta: time
-    etd: str
+    etd: time | str
     std: time
     formation: Optional[Formation]
     is_circular_route: bool
@@ -111,7 +111,7 @@ class Service:
     is_reverse_formation: bool
     cancel_reason: str
     delay_reason: str
-    destination: list
+    destination: List[Destination]
     detach_front: bool
     operator: str
     operator_code: str
