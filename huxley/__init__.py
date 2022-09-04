@@ -1,14 +1,15 @@
 """Read and parse information from the Huxley API for National Rail services."""
 # type: ignore [call-arg]
-import os
 import json
-from dataclasses import dataclass, field
+import os
 from datetime import datetime, time
-from typing import Optional, List
+from typing import List, Optional, Union
 
 import requests
 from dateutil import parser, tz
 from dotenv import load_dotenv
+from pydantic.dataclasses import dataclass
+
 from .codes import OPERATOR_CODES
 
 
@@ -84,8 +85,8 @@ class Destination:
 
     location_name: str
     crs: str
-    via: str
-    future_change_to: str
+    via: Optional[str]
+    future_change_to: Optional[str]
     assoc_is_cancelled: bool
 
     def __init__(self, destination: dict):
@@ -101,23 +102,23 @@ class Destination:
 class Service:
     """Define a service, such as a train, bus or ferry."""
 
-    eta: time
-    sta: time
-    etd: time | str
+    etd: Union[time, str]
     std: time
-    formation: Optional[Formation]
     is_circular_route: bool
     is_cancelled: bool
     is_reverse_formation: bool
-    cancel_reason: str
-    delay_reason: str
     destination: List[Destination]
     detach_front: bool
     operator: str
     operator_code: str
-    platform: int
     service_id_guid: str
     service_type: int
+    cancel_reason: Optional[str] = None
+    delay_reason: Optional[str] = None
+    formation: Optional[Formation] = None
+    eta: Optional[time] = None
+    sta: Optional[time] = None
+    platform: Optional[str] = None
 
     def __init__(self, service: dict):
         """Intialise a Service object."""
@@ -136,7 +137,11 @@ class Service:
         if service.get("std") is not None:
             self.std = datetime.strptime(service["std"], "%H:%M").time()
 
-        self.etd = service["etd"]
+        if service.get("etd") not in [None, "On time", "Delayed", "Cancelled"]:
+            self.etd = datetime.strptime(service["etd"], "%H:%M").time()
+        else:
+            self.etd = service["etd"]
+
         self.is_circular_route = service["isCircularRoute"]
         self.is_cancelled = service["isCancelled"]
         self.is_reverse_formation = service["isReverseFormation"]
@@ -161,13 +166,16 @@ class Service:
         return short_name
 
 
+@dataclass
 class Station:
     """Interface to the Huxley API."""
+
+    BASE_URL: str
 
     def __init__(self, crs):
         """Intiialise call to the API with a CRS (station code)."""
         load_dotenv()
-        self.BASE_URL: str = "http://huxley2.azurewebsites.net"
+        self.BASE_URL = "http://huxley2.azurewebsites.net"
         self.crs: str = crs
         self.access_token = os.getenv("DARWIN_API_KEY")
         self.response: dict = {}
