@@ -67,7 +67,7 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
 
             # If formation exists, add it to the table.
             if show_formation:
-                if hasattr(service, "formation") and service.is_cancelled is False:
+                if service.formation is not None and service.is_cancelled is False:
                     formation: str = parse_formation(service)
                     # Only add the formation if it's not an empty string.
                     if formation:
@@ -163,7 +163,7 @@ def parse_platform(service) -> str:
     if service.platform == None:
         platform = "—"
     else:
-        platform = service.platform
+        platform = str(service.platform)
     return platform
 
 
