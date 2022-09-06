@@ -5,6 +5,7 @@ import re
 
 import click
 import html
+from datetime import datetime, time
 from rich import box
 from rich.console import Console
 from rich.padding import Padding
@@ -146,24 +147,25 @@ def parse_destinations(service) -> str:
 
 def parse_etd(service) -> str:
     """Parse the expected departure time of a service, adding color hints."""
-    etd: str = service.etd
+    etd: str = ""
     if service.etd == "On time":
-        etd = f"[success]{etd}[/success]"
+        etd = f"[success]{service.etd}[/success]"
     elif service.etd == "Cancelled" and service.is_cancelled is True:
-        etd = f"[danger]{etd}[/danger]"
+        etd = f"[danger]{service.etd}[/danger]"
     elif service.etd == None:
         etd = f"—"
     elif service.etd != service.std:
-        etd = f"[warning]{etd}[/warning]"
+        etd = f"[warning]{service.etd.strftime('%H:%M')}[/warning]"
     return etd
 
 
 def parse_platform(service) -> str:
     platform: str = ""
-    if service.platform == None:
-        platform = "—"
-    else:
-        platform = str(service.platform)
+    match service.platform:
+        case None:
+            platform = "-"
+        case _:
+            platform = service.platform
     return platform
 
 
