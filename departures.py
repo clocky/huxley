@@ -147,15 +147,21 @@ def parse_destinations(service) -> str:
 
 def parse_etd(service) -> str:
     """Parse the expected departure time of a service, adding color hints."""
-    etd: str = ""
+    etd: str = service.etd
+    tag: str = "white"
     if service.etd == "On time":
-        etd = f"[success]{service.etd}[/success]"
+        tag = "success"
+    elif service.etd == "Delayed":
+        tag = "warning"
     elif service.etd == "Cancelled" and service.is_cancelled is True:
-        etd = f"[danger]{service.etd}[/danger]"
+        tag = "danger"
     elif service.etd == None:
-        etd = f"—"
+        tag = "white"
+        etd = "—"
     elif service.etd != service.std:
-        etd = f"[warning]{service.etd.strftime('%H:%M')}[/warning]"
+        tag = "warning"
+        etd = service.etd.strftime("%H:%M")
+    etd = f"[{tag}]{etd}[/{tag}]"
     return etd
 
 
