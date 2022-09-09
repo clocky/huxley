@@ -28,43 +28,53 @@ BOOTSTRAP = Theme(
 )
 
 
-def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
+def show_board(station, show_nrcc_messages: bool, show_formation: bool):
     """Render a Rich table of departures for a railway station."""
     console = Console(theme=BOOTSTRAP)
+    direction: str = "Destination" if station.board == "departures" else "Origin"
+    title_suffix: str = "Departures" if station.board == "departures" else "Arrivals"
+    title: str = f"{station.location_name}: {title_suffix}"
 
     table = Table(
         style="secondary",
         show_header=True,
         box=box.SIMPLE_HEAD,
-        title=station.location_name,
+        title=title,
         title_style="primary",
         pad_edge=False,
         show_lines=False,
     )
     table.caption_style = "warning"
+
     table.add_column("Time", width=6)
-    table.add_column("Destination", style="warning", width=45)
+    table.add_column(direction, style="warning", width=45)
     table.add_column("Plat", justify="right", width=4)
     table.add_column("Expected", justify="right", width=9)
     table.add_column("Operator", justify="right", style="info", width=16)
 
     if station.train_services:
         for service in station.train_services:
-            std: str = service.std.strftime("%H:%M")
+            st: str = ""
+            if service.std:
+                st = service.std.strftime("%H:%M")
+            elif service.sta:
+                st = service.sta.strftime("%H:%M")
             platform: str = parse_platform(service)
             operator: str = service.operator_short_name
-            destination: str = parse_destinations(service)
-            etd: str = parse_etd(service)
+
+            location: str = parse_station(service)
+
+            et: str = parse_et(service)
 
             # If the cancel reason is not empty, add it to the destination.
             if hasattr(service, "cancel_reason"):
                 if service.is_cancelled is True and service.cancel_reason is not None:
-                    destination += f"\n[secondary]{service.cancel_reason}[/secondary]"
+                    location += f"\n[secondary]{service.cancel_reason}[/secondary]"
 
             # If the delay reason is not empty, add it to the destination.
             if hasattr(service, "delay_reason"):
                 if service.delay_reason is not None and service.cancel_reason is None:
-                    destination += f"\n[secondary]{service.delay_reason}[/secondary]"
+                    location += f"\n[secondary]{service.delay_reason}[/secondary]"
 
             # If formation exists, add it to the table.
             if show_formation:
@@ -72,10 +82,10 @@ def show_departures(station, show_nrcc_messages: bool, show_formation: bool):
                     formation: str = parse_formation(service)
                     # Only add the formation if it's not an empty string.
                     if formation:
-                        destination += f"\n[light]{formation}[/light]"
+                        location += f"\n[light]{formation}[/light]"
 
             # Add everything to the table
-            table.add_row(std, destination, platform, etd, operator)
+            table.add_row(st, location, platform, et, operator)
 
     console.print(table)
 
@@ -119,50 +129,53 @@ def parse_nrcc_messages(nrcc_messages: list) -> list:
     return messages
 
 
-def parse_destinations(service) -> str:
-    """Show the destination of a service, including any via points."""
-    destinations: list = []
-    for d in service.destination:
-        destination = d.location_name
+def parse_station(service) -> str:
+    """Show the origin or destination of a service, including any via points."""
+    stations: list = []
+    source: str = "destination" if service.std is not None else "origin"
+    for d in getattr(service, source):
+        location = d.location_name
         if hasattr(d, "via") and d.via is not None:
-            destination = f"{d.location_name} [white]{d.via}[/white]"
+            location = f"{d.location_name} [white]{d.via}[/white]"
         else:
-            destination = d.location_name
-        destinations.append(destination)
+            location = d.location_name
+        stations.append(location)
     parsed: str = ""
-    match len(destinations):
+
+    match len(stations):
         case 1:
-            parsed = f"{destinations[0]}"
+            parsed = f"{stations[0]}"
         case 2:
-            parsed = f"{destinations[0]} [secondary]and[/secondary] {destinations[1]}"
+            parsed = f"{stations[0]} [secondary]and[/secondary] {stations[1]}"
         case _:
             parsed = (
-                "[secondary],[/secondary] ".join(destinations[:-1])
+                "[secondary],[/secondary] ".join(stations[:-1])
                 + " [secondary]and[/secondary] "
-                + destinations[-1]
+                + stations[-1]
             )
 
     return parsed
 
 
-def parse_etd(service) -> str:
+def parse_et(service) -> str:
     """Parse the expected departure time of a service, adding color hints."""
-    etd: str = service.etd
+    estimated_time: str = ""
     tag: str = "white"
-    if service.etd == "On time":
+    property: str = "etd" if service.etd is not None else "eta"
+    if getattr(service, property) == "On time":
         tag = "success"
-    elif service.etd == "Delayed":
+    elif getattr(service, property) == "Delayed":
         tag = "warning"
-    elif service.etd == "Cancelled" and service.is_cancelled is True:
+    elif getattr(service, property) == "Cancelled" and service.is_cancelled is True:
         tag = "danger"
-    elif service.etd == None:
+    elif getattr(service, property) == None:
         tag = "white"
-        etd = "—"
-    elif service.etd != service.std:
+        et = "—"
+    elif getattr(service, property) != service.std:
         tag = "warning"
-        etd = service.etd.strftime("%H:%M")
-    etd = f"[{tag}]{etd}[/{tag}]"
-    return etd
+        et = getattr(service, property).strftime("%H:%M")
+    estimated_time = f"[{tag}]{getattr(service, property)}[/{tag}]"
+    return estimated_time
 
 
 def parse_platform(service) -> str:
@@ -220,21 +233,44 @@ def parse_platform(service) -> str:
     help="Use local JSON data for debugging",
 )
 @click.option(
-    "-a",
-    "--api",
+    "-d",
+    "--debug",
     type=bool,
     is_flag=True,
     default=False,
     help="Show API response for debugging",
 )
-def departures(crs, rows, show_nrcc_messages, show_formation, local, api):
+@click.option(
+    "-a",
+    "--arrivals",
+    is_flag=True,
+    default=False,
+    help="Show arrivals instead of departures",
+)
+def main(crs, arrivals, rows, show_nrcc_messages, show_formation, local, debug):
+    if arrivals:
+        arrival_board(crs, rows, show_nrcc_messages, show_formation, local, debug)
+    else:
+        departure_board(crs, rows, show_nrcc_messages, show_formation, local, debug)
+
+
+def departure_board(crs, rows, show_nrcc_messages, show_formation, local, api):
     """CLI tool to show departures for a railway station."""
     station = huxley.Station(crs)
     station.get_departures(expand=False, rows=rows, local=local)
+    show_board(station, show_nrcc_messages, show_formation)
     if api:
         print(station.url)
-    show_departures(station, show_nrcc_messages, show_formation)
+
+
+def arrival_board(crs, rows, show_nrcc_messages, show_formation, local, api):
+    """CLI tool to show arrivals for a railway station."""
+    station = huxley.Station(crs)
+    station.get_arrivals(expand=False, rows=rows, local=local)
+    show_board(station, show_nrcc_messages, show_formation)
+    if api:
+        print(station.url)
 
 
 if __name__ == "__main__":
-    departures()
+    main()

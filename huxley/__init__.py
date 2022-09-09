@@ -102,8 +102,6 @@ class Destination:
 class Service:
     """Define a service, such as a train, bus or ferry."""
 
-    etd: Union[time, str]
-    std: time
     is_circular_route: bool
     is_cancelled: bool
     is_reverse_formation: bool
@@ -113,11 +111,15 @@ class Service:
     operator_code: str
     service_id_guid: str
     service_type: int
+    is_early: bool = False
+    is_delayed: bool = False
     cancel_reason: Optional[str] = None
     delay_reason: Optional[str] = None
     formation: Optional[Formation] = None
-    eta: Optional[time] = None
+    eta: Optional[Union[time, str]] = None
     sta: Optional[time] = None
+    etd: Optional[Union[time, str]] = None
+    std: Optional[time] = None
     platform: Optional[str] = None
 
     def __init__(self, service: dict):
@@ -128,8 +130,10 @@ class Service:
         if service.get("formation") is not None:
             self.formation = Formation(service["formation"])
 
-        if service.get("eta") is not None:
+        if service.get("eta") not in [None, "On time", "Delayed", "Cancelled"]:
             self.eta = datetime.strptime(service["eta"], "%H:%M").time()
+        else:
+            self.eta = service["eta"]
 
         if service.get("sta") is not None:
             self.sta = datetime.strptime(service["sta"], "%H:%M").time()
@@ -171,6 +175,7 @@ class Station:
     """Interface to the Huxley API."""
 
     BASE_URL: str
+    board: str = None
 
     def __init__(self, crs):
         """Intiialise call to the API with a CRS (station code)."""
@@ -205,10 +210,12 @@ class Station:
 
     def get_departures(self, expand: bool = False, rows: int = 8, local: bool = False):
         """Request a list of departures for a given railway station."""
+        self.board = "departures"
         self.get_data("departures", expand=expand, rows=rows, local=local)
 
-    def get_arrivals(self, expand: bool = False, rows: int = 8):
+    def get_arrivals(self, expand: bool = False, rows: int = 8, local: bool = False):
         """Request a list of arrivals for a given railway station."""
+        self.board = "arrivals"
         self.get_data("arrivals", expand=expand, rows=rows)
 
     @property
