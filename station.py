@@ -153,6 +153,7 @@ def parse_et(service: huxley.Service) -> str:
     """Parse the expected departure time of a service, adding color hints."""
     attr = "etd" if service.etd is not None else "eta"
     value = getattr(service, attr)
+    scheduled = service.std if attr == "etd" else service.sta
     if value is None:
         return "[white]\u2014[/white]"
     if value == "On time":
@@ -161,8 +162,9 @@ def parse_et(service: huxley.Service) -> str:
         tag = "warning"
     elif value == "Cancelled" and service.is_cancelled:
         tag = "danger"
-    elif isinstance(value, time) and value != service.std:
-        tag = "warning"
+    elif isinstance(value, time):
+        tag = "warning" if scheduled is not None and value != scheduled else "white"
+        value = value.strftime("%H:%M")
     else:
         tag = "white"
     return f"[{tag}]{value}[/{tag}]"
