@@ -7,6 +7,27 @@ Uses the [Huxley2 API](https://huxley2.azurewebsites.net) for requests and [Boot
 
 ## Install
 
-1. ```python3 -m pip install -r requirements.txt```
-2. Set a `DARWIN_API_KEY` in a `.env` file in the root of this project. If you don't already have one, you can request an access token via the National Rail [OpenLDBWS portal](https://realtime.nationalrail.co.uk/OpenLDBWSRegistration/Registration).
-3. ```python3 -m flask run```
+1. ```python3 -m venv .venv && source .venv/bin/activate```
+2. ```pip install -r requirements.txt```
+3. Set a `DARWIN_API_KEY` in a `.env` file in the root of this project. If you don't already have one, you can request an access token via the National Rail [OpenLDBWS portal](https://realtime.nationalrail.co.uk/OpenLDBWSRegistration/Registration).
+
+## Web
+
+```flask run```
+
+Opens a departure board at http://127.0.0.1:5000. Defaults to London Waterloo. Navigate to `/departures/<crs>/` for other stations.
+
+## CLI
+
+```python station.py -s <crs>```
+
+Options:
+
+| Flag | Description |
+|------|-------------|
+| `-s`, `--station` | CRS code of the station (e.g. `kgx`, `wat`, `pad`) |
+| `-r`, `--rows` | Number of services to show (default: 10) |
+| `-a`, `--arrivals` | Show arrivals instead of departures |
+| `-f`, `--formation` | Show train formation (coach count, first class, toilets) |
+| `-m`, `--messages` | Show NRCC messages |
+| `-d`, `--debug` | Print the API URL |

@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """CLI tool to show upcoming departures for a given railway station."""
+# TODO: Show bus and ferry replacement services (only train_services are rendered)
+# TODO: Show currentOrigins/currentDestinations when a service is diverted or short-formed
+# TODO: Show adhocAlerts (e.g. "No toilet facilities on this service")
+# TODO: Handle filterLocationCancelled for filtered queries (e.g. WAT to WOK)
+# TODO: Show service length from top-level field when detailed formation is unavailable
+import html
 import re
+from datetime import time
+from typing import Any
 
 import click
-import html
-from datetime import datetime, time
 from rich import box
 from rich.console import Console
 from rich.padding import Padding
@@ -28,7 +34,7 @@ BOOTSTRAP = Theme(
 )
 
 
-def show_board(station, show_nrcc_messages: bool, show_formation: bool):
+def show_board(station: huxley.Station, show_nrcc_messages: bool, show_formation: bool) -> None:
     """Render a Rich table of departures for a railway station."""
     console = Console(theme=BOOTSTRAP)
     direction: str = "Destination" if station.board == "departures" else "Origin"
@@ -66,47 +72,37 @@ def show_board(station, show_nrcc_messages: bool, show_formation: bool):
 
             et: str = parse_et(service)
 
-            # If the cancel reason is not empty, add it to the destination.
-            if hasattr(service, "cancel_reason"):
-                if service.is_cancelled is True and service.cancel_reason is not None:
-                    location += f"\n[secondary]{service.cancel_reason}[/secondary]"
+            if service.is_cancelled and service.cancel_reason is not None:
+                location += f"\n[secondary]{service.cancel_reason}[/secondary]"
+            elif service.delay_reason is not None:
+                location += f"\n[secondary]{service.delay_reason}[/secondary]"
 
-            # If the delay reason is not empty, add it to the destination.
-            if hasattr(service, "delay_reason"):
-                if service.delay_reason is not None and service.cancel_reason is None:
-                    location += f"\n[secondary]{service.delay_reason}[/secondary]"
-
-            # If formation exists, add it to the table.
             if show_formation:
                 if service.formation is not None and service.is_cancelled is False:
                     formation: str = parse_formation(service)
-                    # Only add the formation if it's not an empty string.
                     if formation:
                         location += f"\n[light]{formation}[/light]"
 
-            # Add everything to the table
             table.add_row(st, location, platform, et, operator)
 
     console.print(table)
 
-    if show_nrcc_messages is True:
-        if station.nrcc_messages is not None:
-            nrcc_messages: list = parse_nrcc_messages(station.nrcc_messages)
-            for message in nrcc_messages:
-                console.print(
-                    Padding(message, (0, 16)),
-                    highlight=False,
-                    style="info",
-                    width=94,
-                    justify="center",
-                )
+    if show_nrcc_messages and station.nrcc_messages:
+        parsed_messages: list[str] = parse_nrcc_messages(station.nrcc_messages)
+        for message in parsed_messages:
+            console.print(
+                Padding(message, (0, 16)),
+                highlight=False,
+                style="info",
+                width=94,
+                justify="center",
+            )
 
 
-def parse_formation(service) -> str:
+def parse_formation(service: huxley.Service) -> str:
     """Parse the formation of a service, adding color hints."""
     diagram: str = ""
-    carriage: str = "■"
-    if service.formation.coaches is not None:
+    if service.formation is not None and service.formation.coaches is not None:
         if service.is_cancelled is False or service.delay_reason == "":
             diagram += "◢"
             coaches: int = len(service.formation.coaches)
@@ -118,74 +114,63 @@ def parse_formation(service) -> str:
     return diagram
 
 
-def parse_nrcc_messages(nrcc_messages: list) -> list:
+def parse_nrcc_messages(nrcc_messages: list[dict[str, Any]]) -> list[str]:
     """Parse NRCC messages, stripping HTML and control characters."""
-    messages: list = []
+    messages: list[str] = []
     for message in nrcc_messages:
-        message["value"] = re.sub(r"<.*?>", "", message["value"])
-        message["value"] = re.sub(r"(\r\n|\n|\r)", "", message["value"])
-        message["value"] = html.unescape(message["value"])
-        messages.append(message["value"])
+        text: str = re.sub(r"<.*?>", "", message["value"])
+        text = re.sub(r"(\r\n|\n|\r)", "", text)
+        text = html.unescape(text)
+        messages.append(text)
     return messages
 
 
-def parse_station(service) -> str:
+def parse_station(service: huxley.Service) -> str:
     """Show the origin or destination of a service, including any via points."""
-    stations: list = []
+    stations: list[str] = []
     source: str = "destination" if service.std is not None else "origin"
     for d in getattr(service, source):
-        location = d.location_name
-        if hasattr(d, "via") and d.via is not None:
+        if d.via is not None:
             location = f"{d.location_name} [white]{d.via}[/white]"
         else:
             location = d.location_name
         stations.append(location)
-    parsed: str = ""
 
     match len(stations):
         case 1:
-            parsed = f"{stations[0]}"
+            return stations[0]
         case 2:
-            parsed = f"{stations[0]} [secondary]and[/secondary] {stations[1]}"
+            return f"{stations[0]} [secondary]and[/secondary] {stations[1]}"
         case _:
-            parsed = (
+            return (
                 "[secondary],[/secondary] ".join(stations[:-1])
                 + " [secondary]and[/secondary] "
                 + stations[-1]
             )
 
-    return parsed
 
-
-def parse_et(service) -> str:
+def parse_et(service: huxley.Service) -> str:
     """Parse the expected departure time of a service, adding color hints."""
-    estimated_time: str = ""
-    tag: str = "white"
-    property: str = "etd" if service.etd is not None else "eta"
-    if getattr(service, property) == "On time":
+    attr = "etd" if service.etd is not None else "eta"
+    value = getattr(service, attr)
+    if value is None:
+        return "[white]\u2014[/white]"
+    if value == "On time":
         tag = "success"
-    elif getattr(service, property) == "Delayed":
+    elif value == "Delayed":
         tag = "warning"
-    elif getattr(service, property) == "Cancelled" and service.is_cancelled is True:
+    elif value == "Cancelled" and service.is_cancelled:
         tag = "danger"
-    elif getattr(service, property) == None:
-        tag = "white"
-        et = "—"
-    elif getattr(service, property) != service.std:
+    elif isinstance(value, time) and value != service.std:
         tag = "warning"
-        et = getattr(service, property).strftime("%H:%M")
-    estimated_time = f"[{tag}]{getattr(service, property)}[/{tag}]"
-    return estimated_time
+    else:
+        tag = "white"
+    return f"[{tag}]{value}[/{tag}]"
 
 
-def parse_platform(service) -> str:
-    platform: str = ""
-    match service.platform:
-        case None:
-            platform = "-"
-        case _:
-            platform = service.platform
-    return platform
+def parse_platform(service: huxley.Service) -> str:
+    """Return the platform number, or a dash if not available."""
+    return service.platform if service.platform is not None else "-"
 
 
 @click.command()
@@ -247,28 +232,15 @@ def parse_platform(service) -> str:
     default=False,
     help="Show arrivals instead of departures",
 )
-def main(crs, arrivals, rows, show_nrcc_messages, show_formation, local, debug):
+def main(crs: str, arrivals: bool, rows: int, show_nrcc_messages: bool, show_formation: bool, local: bool, debug: bool) -> None:
+    """Show upcoming departures or arrivals for a given railway station."""
+    station = huxley.Station(crs)
     if arrivals:
-        arrival_board(crs, rows, show_nrcc_messages, show_formation, local, debug)
+        station.get_arrivals(expand=False, rows=rows, local=local)
     else:
-        departure_board(crs, rows, show_nrcc_messages, show_formation, local, debug)
-
-
-def departure_board(crs, rows, show_nrcc_messages, show_formation, local, api):
-    """CLI tool to show departures for a railway station."""
-    station = huxley.Station(crs)
-    station.get_departures(expand=False, rows=rows, local=local)
+        station.get_departures(expand=False, rows=rows, local=local)
     show_board(station, show_nrcc_messages, show_formation)
-    if api:
-        print(station.url)
-
-
-def arrival_board(crs, rows, show_nrcc_messages, show_formation, local, api):
-    """CLI tool to show arrivals for a railway station."""
-    station = huxley.Station(crs)
-    station.get_arrivals(expand=False, rows=rows, local=local)
-    show_board(station, show_nrcc_messages, show_formation)
-    if api:
+    if debug:
         print(station.url)
 
 
