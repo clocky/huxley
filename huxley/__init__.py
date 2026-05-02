@@ -8,7 +8,7 @@ from typing import List, Optional, Union
 import requests
 from dateutil import parser, tz
 from dotenv import load_dotenv
-from pydantic.dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .codes import OPERATOR_CODES
 
