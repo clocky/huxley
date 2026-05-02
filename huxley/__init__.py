@@ -1,16 +1,17 @@
 """Read and parse information from the Huxley API for National Rail services."""
-# type: ignore [call-arg]
 import json
 import os
 from datetime import datetime, time
-from typing import List, Optional, Union
+from typing import Any
 
 import requests
 from dateutil import parser, tz
 from dotenv import load_dotenv
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from .codes import OPERATOR_CODES
+
+load_dotenv()
 
 
 @dataclass
@@ -20,7 +21,7 @@ class Toilet:
     status: int
     value: str
 
-    def __init__(self, toilet: dict):
+    def __init__(self, toilet: dict[str, Any]) -> None:
         """Initialise a toilet object."""
         self.status = toilet["status"]
         self.value = toilet["value"]
@@ -32,11 +33,11 @@ class Coach:
 
     number: str
     coach_class: str
-    toilet: Optional[Toilet]
+    toilet: Toilet | None
     loading: int = 0
     loading_specified: bool = False
 
-    def __init__(self, coach: dict):
+    def __init__(self, coach: dict[str, Any]) -> None:
         """Initialise a Coach object."""
         self.coach_class = coach["coachClass"]
         self.loading = coach["loading"]
@@ -48,30 +49,14 @@ class Coach:
 
 
 @dataclass
-class Point:
-    """A class to represent a calling point on a service."""
-
-    location_name: str
-    crs: str
-    st: time
-    et: time | str
-    at: time
-    is_cancelled: bool
-    length: int
-    detach_front: bool
-    formation: str
-    adhoc_alerts: str
-
-
-@dataclass
 class Formation:
     """A class to represent a train formation."""
 
     avg_loading: int
     avg_loading_specified: bool
-    coaches: Optional[List[Coach]] = None
+    coaches: list[Coach] | None = None
 
-    def __init__(self, formation: dict):
+    def __init__(self, formation: dict[str, Any]) -> None:
         """Define a train formation, including the coaches."""
         self.avg_loading = formation["avgLoading"]
         self.avg_loading_specified = formation["avgLoadingSpecified"]
@@ -85,11 +70,11 @@ class Destination:
 
     location_name: str
     crs: str
-    via: Optional[str]
-    future_change_to: Optional[str]
+    via: str | None
+    future_change_to: str | None
     assoc_is_cancelled: bool
 
-    def __init__(self, destination: dict):
+    def __init__(self, destination: dict[str, Any]) -> None:
         """Initialise a point."""
         self.location_name = destination["locationName"]
         self.crs = destination["crs"]
@@ -105,7 +90,8 @@ class Service:
     is_circular_route: bool
     is_cancelled: bool
     is_reverse_formation: bool
-    destination: List[Destination]
+    destination: list[Destination]
+    origin: list[Destination]
     detach_front: bool
     operator: str
     operator_code: str
@@ -113,17 +99,17 @@ class Service:
     service_type: int
     is_early: bool = False
     is_delayed: bool = False
-    cancel_reason: Optional[str] = None
-    delay_reason: Optional[str] = None
-    formation: Optional[Formation] = None
-    eta: Optional[Union[time, str]] = None
-    sta: Optional[time] = None
-    etd: Optional[Union[time, str]] = None
-    std: Optional[time] = None
-    platform: Optional[str] = None
+    cancel_reason: str | None = None
+    delay_reason: str | None = None
+    formation: Formation | None = None
+    eta: time | str | None = None
+    sta: time | None = None
+    etd: time | str | None = None
+    std: time | None = None
+    platform: str | None = None
 
-    def __init__(self, service: dict):
-        """Intialise a Service object."""
+    def __init__(self, service: dict[str, Any]) -> None:
+        """Initialise a Service object."""
         self.destination = [Destination(d) for d in service["destination"]]
         self.origin = [Destination(o) for o in service["origin"]]
 
@@ -161,13 +147,9 @@ class Service:
     @property
     def operator_short_name(self) -> str:
         """Return the friendly name of the operator."""
-        short_name: str = ""
-
         if self.operator_code in OPERATOR_CODES:
-            short_name = OPERATOR_CODES[self.operator_code]
-        else:
-            short_name = f"[{self.operator_code}] {self.operator}"
-        return short_name
+            return OPERATOR_CODES[self.operator_code]
+        return f"[{self.operator_code}] {self.operator}"
 
 
 @dataclass
@@ -175,15 +157,14 @@ class Station:
     """Interface to the Huxley API."""
 
     BASE_URL: str
-    board: str = None
+    board: str | None = None
 
-    def __init__(self, crs):
-        """Intiialise call to the API with a CRS (station code)."""
-        load_dotenv()
+    def __init__(self, crs: str) -> None:
+        """Initialise call to the API with a CRS (station code)."""
         self.BASE_URL = "http://huxley2.azurewebsites.net"
         self.crs: str = crs
-        self.access_token = os.getenv("DARWIN_API_KEY")
-        self.response: dict = {}
+        self.access_token: str | None = os.getenv("DARWIN_API_KEY")
+        self.response: dict[str, Any] = {}
         self.url: str = ""
 
     def get_data(
@@ -191,9 +172,9 @@ class Station:
     ) -> bool:
         """Use Requests to retrieve JSON data from the Huxley API."""
         if not local:
-            self.payload: dict = {"accessToken": self.access_token, "expand": expand}
-            self.endpoint: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
-            r = requests.get(self.endpoint, params=self.payload)
+            payload: dict[str, Any] = {"accessToken": self.access_token, "expand": expand}
+            url: str = f"{self.BASE_URL}/{endpoint}/{self.crs}/{rows}"
+            r = requests.get(url, params=payload)
             self.url = r.url
             if r.status_code == 200:
                 self.response = r.json()
@@ -203,20 +184,21 @@ class Station:
         else:
             self.response = {}
             try:
-                self.response = json.load(open(f"./data/{self.crs}.json"))
+                with open(f"./data/{self.crs}.json") as f:
+                    self.response = json.load(f)
                 return True
             except FileNotFoundError:
                 return False
 
-    def get_departures(self, expand: bool = False, rows: int = 8, local: bool = False):
+    def get_departures(self, expand: bool = False, rows: int = 8, local: bool = False) -> None:
         """Request a list of departures for a given railway station."""
         self.board = "departures"
         self.get_data("departures", expand=expand, rows=rows, local=local)
 
-    def get_arrivals(self, expand: bool = False, rows: int = 8, local: bool = False):
+    def get_arrivals(self, expand: bool = False, rows: int = 8, local: bool = False) -> None:
         """Request a list of arrivals for a given railway station."""
         self.board = "arrivals"
-        self.get_data("arrivals", expand=expand, rows=rows)
+        self.get_data("arrivals", expand=expand, rows=rows, local=local)
 
     @property
     def generated_at(self) -> datetime:
@@ -233,51 +215,46 @@ class Station:
         return generated_at
 
     @property
-    def train_services(self) -> list:
+    def train_services(self) -> list[Service]:
         """Return a list of train services for a given station."""
-        train_services: list = []
         if self.response.get("trainServices") is not None:
-            train_services = [Service(s) for s in self.response["trainServices"]]
-        return train_services
+            return [Service(s) for s in self.response["trainServices"]]
+        return []
 
     @property
-    def bus_services(self) -> list:
+    def bus_services(self) -> list[Service]:
         """Return a list of replacement bus services for a given station."""
-        bus_services: list = []
         if self.response.get("busServices") is not None:
-            bus_services = [Service(s) for s in self.response["busServices"]]
-        return bus_services
+            return [Service(s) for s in self.response["busServices"]]
+        return []
 
     @property
-    def ferry_services(self) -> list:
+    def ferry_services(self) -> list[Service]:
         """Return a list of ferry services for a given station."""
-        ferry_services: list = []
         if self.response.get("ferryServices") is not None:
-            ferry_services = [Service(s) for s in self.response["ferryServices"]]
-        return ferry_services
+            return [Service(s) for s in self.response["ferryServices"]]
+        return []
 
     @property
-    def nrcc_messages(self) -> dict:
+    def nrcc_messages(self) -> list[dict[str, Any]]:
         """Retrieve any National Rail Communication Center message for the station."""
-        nrcc_messages: dict = {}
         if self.response.get("nrccMessages") is not None:
-            nrcc_messages = self.response["nrccMessages"]
-        return nrcc_messages
+            result: list[dict[str, Any]] = self.response["nrccMessages"]
+            return result
+        return []
 
     @property
     def location_name(self) -> str:
         """Return the location name for the station."""
-        location_name: str = ""
         if self.response.get("locationName") is not None:
-            location_name = self.response["locationName"]
-        else:
-            location_name = f"Unknown location: '{self.crs}'"
-        return location_name
+            name: str = self.response["locationName"]
+            return name
+        return f"Unknown location: '{self.crs}'"
 
     @property
     def are_services_available(self) -> bool:
         """Return a boolean response indicating whether services are available."""
-        are_services_available: bool = False
         if self.response.get("areServicesAvailable") is not None:
-            are_services_available = self.response["areServicesAvailable"]
-        return are_services_available
+            available: bool = self.response["areServicesAvailable"]
+            return available
+        return False
